@@ -10,6 +10,10 @@ window.onload = () => {
     const navItems = document.querySelectorAll('.nav-item');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    const menuToggle = document.getElementById('menuToggle');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const appContainer = document.querySelector('.app-container');
+
 
     if (!bookElement) return;
 
@@ -552,9 +556,15 @@ window.onload = () => {
         width: 650, 
         height: 950, 
         size: "stretch", 
+        minWidth: 320,
+        minHeight: 480,
+        maxWidth: 2000,
+        maxHeight: 2000,
         showCover: true,
         maxShadowOpacity: 0.2,
-        mobileScrollSupport: false
+        mobileScrollSupport: true,
+        usePortrait: true,
+        flippingTime: 800
     });
 
     flipBook.loadFromHTML(document.querySelectorAll('.page'));
@@ -575,7 +585,37 @@ window.onload = () => {
     });
 
     navItems.forEach(nav => {
-        nav.onclick = () => flipBook.flip(parseInt(nav.getAttribute('data-page')));
+        nav.onclick = () => {
+            flipBook.flip(parseInt(nav.getAttribute('data-page')));
+            if (window.innerWidth <= 768) {
+                appContainer.classList.remove('sidebar-open');
+            }
+        };
+    });
+
+    // --- Mobile Sidebar Controls ---
+    if (menuToggle) {
+        menuToggle.onclick = () => appContainer.classList.add('sidebar-open');
+    }
+    if (closeSidebar) {
+        closeSidebar.onclick = () => appContainer.classList.remove('sidebar-open');
+    }
+
+    // Close sidebar on background click
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768 && 
+            appContainer.classList.contains('sidebar-open') && 
+            !e.target.closest('.sidebar') && 
+            !e.target.closest('.menu-toggle')) {
+            appContainer.classList.remove('sidebar-open');
+        }
+    });
+
+    // Handle Resize (Optional but helpful for smooth transition)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            appContainer.classList.remove('sidebar-open');
+        }
     });
 
     if (window.mermaid) mermaid.init(undefined, document.querySelectorAll('.mermaid'));

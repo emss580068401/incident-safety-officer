@@ -15,11 +15,20 @@
     </script>
 </head>
 <body>
+    <button id="menuToggle" class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2 style="font-size: 1.4rem;">ISO 指引 v1.1</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="font-size: 1.4rem; margin: 0;">ISO 指引 v1.1</h2>
+                    <button id="closeSidebar" class="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
                 <span class="badge" style="background: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.7rem;">Hsinchu x Tactical Black</span>
             </div>
             <ul class="nav-list">
