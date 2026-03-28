@@ -565,6 +565,8 @@ window.onload = () => {
         mobileScrollSupport: false,
         usePortrait: true,
         useMouseEvents: false, // Disable default clicks/swipes
+        disableFlipByClick: true, // Disable clicking surface
+        showPageCorners: false, // Hide corner folded visual
         flippingTime: 800
     });
 
