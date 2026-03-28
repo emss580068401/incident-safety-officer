@@ -564,6 +564,7 @@ window.onload = () => {
         maxShadowOpacity: 0.2,
         mobileScrollSupport: false,
         usePortrait: true,
+        useMouseEvents: false, // Disable default clicks/swipes
         flippingTime: 800
     });
 
@@ -610,6 +611,42 @@ window.onload = () => {
             appContainer.classList.remove('sidebar-open');
         }
     });
+
+    // --- Custom Side-Zone Gesture Controls ---
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    bookElement.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+    }, { passive: true });
+
+    bookElement.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        const deltaTime = Date.now() - touchStartTime;
+
+        const screenWidth = window.innerWidth;
+        const leftZone = screenWidth * 0.2;
+        const rightZone = screenWidth * 0.8;
+
+        // Ensure it's a quick swipe or a tap
+        if (deltaTime < 300) {
+            // Check if touch started in side zones
+            if (touchStartX < leftZone) {
+                // Left Side: Swipe right or Tap to go Prev
+                if (deltaX > 30 || Math.abs(deltaX) < 10) flipBook.flipPrev();
+            } else if (touchStartX > rightZone) {
+                // Right Side: Swipe left or Tap to go Next
+                if (deltaX < -30 || Math.abs(deltaX) < 10) flipBook.flipNext();
+            }
+            // Middle Zone: (20% - 80%) Ignore horizontal movements to allow vertical scroll
+        }
+    }, { passive: true });
 
     // Handle Resize (Optional but helpful for smooth transition)
     window.addEventListener('resize', () => {
