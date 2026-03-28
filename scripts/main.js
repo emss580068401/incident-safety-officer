@@ -562,7 +562,7 @@ window.onload = () => {
         maxHeight: 2000,
         showCover: true,
         maxShadowOpacity: 0.2,
-        mobileScrollSupport: true,
+        mobileScrollSupport: false,
         usePortrait: true,
         flippingTime: 800
     });

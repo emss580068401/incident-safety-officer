@@ -149,6 +149,7 @@ body {
     font-size: 1.15rem; /* Larger base font for field-grade readability */
     line-height: 1.7;
     overflow-y: auto;
+    touch-action: pan-y;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
