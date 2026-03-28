@@ -1,0 +1,263 @@
+/* --- 3D Flip-book Layout Optimized v4 --- */
+:root {
+    --primary: #ff0000;
+    --primary-hover: #cc0000;
+    --bg-dark: #0f172a;
+    --sidebar-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+    --card-bg: #f1f5f9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* App Layout */
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 300px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid #334155;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+
+.sidebar-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #334155;
+}
+
+.nav-list {
+    list-style: none;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.nav-section {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #ef4444; /* Vivid Red Stages */
+    font-weight: 900;
+    margin: 1.5rem 0 0.8rem 0;
+}
+
+.nav-item {
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.4rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+}
+
+.nav-item:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-main);
+}
+
+.nav-item.active {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+}
+
+/* Main Content Area - 1.5x HERO ALIGNMENT */
+.main-content {
+    flex-grow: 1;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: flex-start; /* Forced start to protect headers */
+    justify-content: center;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    padding: 60px 2rem 4rem 2rem; /* Strategic 60px top push */
+    overflow-y: auto; /* Enable scroll for Hero height */
+}
+
+/* Book Container - 1.5x LARGE SCALE */
+#book-container {
+    width: 100%;
+    min-height: 950px; /* 1.5x baseline */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 2000px;
+    filter: drop-shadow(0 25px 50px rgba(0,0,0,0.5));
+}
+
+.flip-book {
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    /* Dimensions will be controlled by JS initialized StPageFlip */
+}
+
+/* --- Page Layout & Typography (Optimized V15.0) --- */
+.page {
+    padding: 3rem 4rem; /* Balanced horizontal/vertical padding */
+    background-color: #ffffff;
+    color: #1a1a1a;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.05); /* Subtle depth */
+    font-size: 1.15rem; /* Larger base font for field-grade readability */
+    line-height: 1.7;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid #e5e7eb;
+}
+
+h1, h2, h3, h4 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+    font-weight: 800;
+}
+
+h2 { font-size: 2rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; width: 100%; }
+h3 { font-size: 1.6rem; margin-top: 1rem; }
+h4 { font-size: 1.3rem; margin-top: 0.5rem; color: #1e293b; }
+
+p { margin-bottom: 1.2rem; }
+
+ul, ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.8rem;
+}
+
+li { margin-bottom: 0.8rem; }
+
+/* --- Tactical Components --- */
+.card {
+    background: #f8fafc;
+    border-left: 6px solid #2563eb;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.quote-box {
+    border: 2px dashed #cbd5e1;
+    padding: 2rem;
+    background: #f1f5f9;
+    border-radius: 12px;
+    font-style: italic;
+    color: #334155;
+    position: relative;
+    margin: 2rem 0;
+}
+
+/* --- Table Styling (Tactical Grade) --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 1.15rem;
+    border: 1px solid #cbd5e1;
+}
+
+th, td {
+    padding: 1.2rem;
+    border: 1px solid #cbd5e1;
+    text-align: left;
+}
+
+th {
+    background: #1e293b;
+    color: #fff;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 2.5rem 1.5rem;
+    font-style: italic;
+    color: #64748b;
+    font-size: 1.2rem;
+}
+
+/* Navigation Buttons */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 65px;
+    height: 65px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.nav-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-50%) scale(1.15);
+}
+
+#prevBtn { left: 3%; }
+#nextBtn { right: 3%; }
+
+/* Bottom Bar */
+.bottom-bar {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(15px);
+    padding: 1rem 2.5rem;
+    border-radius: 40px;
+    color: white;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* Global Image Constraint */
+.page img {
+    max-width: 100%;
+    max-height: 450px;
+    display: block;
+    margin: 1.2rem auto;
+    object-fit: contain; /* Changed to contain for better tactical viewing */
+    border-radius: 8px;
+}
+
+/* Mermaid Adjustments */
+.mermaid {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    border: 1px solid #e2e8f0;
+}

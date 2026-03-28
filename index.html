@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事故安全官實戰指引 v1.1 - 全黑旗艦旗艦版</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Mermaid Flowcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <!-- StPageFlip 3D Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'loose' });
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2 style="font-size: 1.4rem;">ISO 指引 v1.1</h2>
+                <span class="badge" style="background: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.7rem;">Hsinchu x Tactical Black</span>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item active" data-page="0">手冊封面</li>
+                <li class="nav-item" data-page="1">局長/科長的話</li>
+                <li class="nav-item" data-page="2">導讀與戰術視覺</li>
+                
+                <li class="nav-section">第一篇：職責法規</li>
+                <li class="nav-item" data-page="3">ICS 定位與獨立權</li>
+                <li class="nav-item" data-page="4">啟動時機與法制盾牌</li>
+                
+                <li class="nav-section">第二篇：黃金SOP</li>
+                <li class="nav-item" data-page="5">報到與掌握 PAS</li>
+                <li class="nav-item" data-page="6">360度環繞偵察全解析</li>
+                <li class="nav-item" data-page="7">安全簡報與 REHAB 設置</li>
+                <li class="nav-item" data-page="8">持續監控 MEDIC 迴圈</li>
+                
+                <li class="nav-section">第三篇：判讀科學</li>
+                <li class="nav-item" data-page="9">DRA 與極速循環</li>
+                <li class="nav-item" data-page="10">風險平衡與安全介入</li>
+                <li class="nav-item" data-page="11">安全指令三部曲與心法</li>
+                <li class="nav-item" data-page="12">濃煙量化 VVCD 評分</li>
+                <li class="nav-item" data-page="13">VVCD 複合判讀模型</li>
+                <li class="nav-item" data-page="14">火與煙色深度判讀</li>
+                
+                <li class="nav-section">紅色警戒模組</li>
+                <li class="nav-item" data-page="15">建築結構倒塌預警</li>
+                <li class="nav-item" data-page="16">鐵皮工廠與化學場所</li>
+                <li class="nav-item" data-page="17">輻射場域與鋰電池 EV</li>
+                <li class="nav-item" data-page="18">人員判讀：英雄主義與體力</li>
+                
+                <li class="nav-section">現場管理與應變</li>
+                <li class="nav-item" data-page="19">PAS 管制與外部 TIC 偵察</li>
+                <li class="nav-item" data-page="20">TIC 溫標與逃生路徑維護</li>
+                <li class="nav-item" data-page="21">MAYDAY LUNAR 與 RIT 救援</li>
+                <li class="nav-item" data-page="22">RIT 任務轉銜細節</li>
+                <li class="nav-item" data-page="23">平面圖判讀：梯開危險空間軟</li>
+                
+                <li class="nav-section">實戰案例與檢討</li>
+                <li class="nav-item" data-page="24">115 年案例 A/B 分享</li>
+                <li class="nav-item" data-page="25">AAR 事故連鎖與文化</li>
+                <li class="nav-item" data-page="26">結語：最後的叮嚀</li>
+                
+                <li class="nav-section">實戰附錄口袋卡</li>
+                <li class="nav-item" data-page="25">附錄：ISO 現場查核口袋卡</li>
+                <li class="nav-item" data-page="26">決策：鐵皮/化學/救援</li>
+                <li class="nav-item" data-page="28">交接：大隊 ISO 查核表</li>
+            </ul>
+        </aside>
+
+        <!-- Flip-book Main Area -->
+        <main class="main-content">
+            <!-- Left Side Arrow -->
+            <button id="prevBtn" class="nav-btn" title="上一頁">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- Book Container -->
+            <div id="book-container">
+                <div class="flip-book" id="book">
+                    <!-- Pages will be injected by scripts/main.js -->
+                </div>
+            </div>
+
+            <!-- Right Side Arrow -->
+            <button id="nextBtn" class="nav-btn" title="下一頁">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <!-- Bottom Floating Page Info -->
+            <div class="bottom-bar" style="bottom: 15px;">
+                第 <span id="pageInfo">1 / 29</span> 頁
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/main.js"></script>
+</body>
+</html>
