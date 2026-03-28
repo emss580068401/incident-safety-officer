@@ -113,7 +113,7 @@ const ISO_CONTENT = [
     `<div class="page">
         <h4>第三步：360 度環繞偵察 (360 Reconnaissance)</h4>
         <p style="font-size: 1.2rem; font-weight: bold; background: #fee2e2; padding: 0.5rem;">你必須繞建築物一圈，不能只看正面。</p>
-        <table style="font-size: 0.9rem; line-height: 1.4; margin-top: 1rem;">
+        <table style="font-size: 1.2rem; line-height: 1.4; margin-top: 1rem;">
             <tr style="background: #1e293b; color: #fff;"><th>面向</th><th>觀測要點</th></tr>
             <tr><td>Side A (正面)</td><td>主進攻點的煙感。</td></tr>
             <tr><td>Side B / D</td><td>看窗戶是否有黑煙冒出，判斷橫向延燒。</td></tr>
@@ -245,7 +245,7 @@ const ISO_CONTENT = [
     `<div class="page">
         <h2 style="font-size: 2rem;">第五章：建築結構判讀</h2>
         <p style="font-size: 1.1rem;">建築物的材質決定了它受熱後的「剩餘時間」。</p>
-        <table style="font-size: 0.82rem; line-height: 1.3;">
+        <table style="font-size: 1.2rem; line-height: 1.3;">
             <tr style="background: #1e293b; color: #fff;"><th>觀察特徵</th><th>代表意義</th><th>ISO 立即動作</th></tr>
             <tr><td>鐵皮牆面漆黑</td><td>高溫,鋼材軟化</td><td>劃定倒塌警戒區(1.5x)</td></tr>
             <tr><td>出現結構裂縫</td><td>坍塌風險</td><td>設置結構哨兵、暫停入室</td></tr>
@@ -542,6 +542,15 @@ const ISO_CONTENT = [
         <div style="margin-top: 4rem; text-align: center;">
             <p style="color: #64748b; font-size: 1.15rem; font-weight: bold;">(全文 723 行完備移植 ・ v1.1 旗艦版交付)</p>
         </div>
+    </div>`,
+
+    // [29] Back Cover (Fix for odd-page spread flipping)
+    `<div class="page cover" style="padding: 0; background: #020617; display: flex; align-items: center; justify-content: center;">
+        <div style="text-align: center; color: #fff; padding: 2rem;">
+            <div style="width: 80px; height: 8px; background: var(--primary); margin: 0 auto 2rem;"></div>
+            <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">安全，是唯一的規則。</h3>
+            <p style="color: #94a3b8;">Hsinchu County Fire Bureau</p>
+        </div>
     </div>`
 ];
 
@@ -633,7 +642,7 @@ const ISO_APP = {
         this.flipBook.on('flip', (e) => {
             const pageIdx = e.data;
             if (pageInfo) pageInfo.textContent = `${pageIdx + 1} / ${ISO_CONTENT.length}`;
-            
+
             navItems.forEach(nav => {
                 const target = parseInt(nav.getAttribute('data-page'));
                 nav.classList.toggle('active', target === pageIdx);
@@ -667,9 +676,9 @@ const ISO_APP = {
 
         // [5] Close sidebar on background click
         document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768 && 
-                container.classList.contains('sidebar-open') && 
-                !e.target.closest('.sidebar') && 
+            if (window.innerWidth <= 768 &&
+                container.classList.contains('sidebar-open') &&
+                !e.target.closest('.sidebar') &&
                 !e.target.closest(this.selectors.menuToggle)) {
                 container.classList.remove('sidebar-open');
             }
@@ -686,38 +695,53 @@ const ISO_APP = {
 
     /**
      * Side-Zone Restricted Gesture Detection
-     * Restricts flipping to left/right 20% zones.
+     * Supports both Mouse and Touch events for cross-platform side-zone flipping.
      */
     initGestureControl() {
-        let touchStartX = 0;
-        let touchStartTime = 0;
+        let startX = 0;
+        let startTime = 0;
         const bookElement = document.querySelector(this.selectors.book);
 
-        bookElement.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartTime = Date.now();
-        }, { passive: true });
+        const handleStart = (x) => {
+            startX = x;
+            startTime = Date.now();
+        };
 
-        bookElement.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].clientX;
-            const deltaX = touchEndX - touchStartX;
-            const deltaTime = Date.now() - touchStartTime;
-
+        const handleEnd = (x) => {
+            const deltaX = x - startX;
+            const deltaTime = Date.now() - startTime;
             const screenWidth = window.innerWidth;
             const threshold = screenWidth * 0.2; // 20% active zone
 
-            // Fast gesture detection (< 300ms)
+            // Fast gesture or tap/click (< 300ms)
             if (deltaTime < 300) {
-                // Zone Logic
-                if (touchStartX < threshold) {
+                if (startX < threshold) {
                     // Left Edge -> Previous
                     if (deltaX > 30 || Math.abs(deltaX) < 10) this.flipBook.flipPrev();
-                } else if (touchStartX > screenWidth - threshold) {
+                } else if (startX > screenWidth - threshold) {
                     // Right Edge -> Next
                     if (deltaX < -30 || Math.abs(deltaX) < 10) this.flipBook.flipNext();
                 }
             }
+        };
+
+        // --- Touch Listeners ---
+        bookElement.addEventListener('touchstart', (e) => {
+            handleStart(e.touches[0].clientX);
         }, { passive: true });
+
+        bookElement.addEventListener('touchend', (e) => {
+            handleEnd(e.changedTouches[0].clientX);
+        }, { passive: true });
+
+        // --- Mouse Listeners (Desktop Support) ---
+        bookElement.addEventListener('mousedown', (e) => {
+            handleStart(e.clientX);
+        });
+
+        bookElement.addEventListener('mouseup', (e) => {
+            handleEnd(e.clientX);
+        });
     }
 };
 
