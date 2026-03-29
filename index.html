@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>事故安全官實戰指引 v1.1 - 全黑旗艦旗艦版</title>
-    <link rel="stylesheet" href="styles/main.css?v=2.0">
+    <title>事故安全官實戰指引 v1.1</title>
+    <link rel="stylesheet" href="styles/main.css?v=2.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Mermaid Flowcharts -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -22,19 +22,18 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h2 style="font-size: 1.4rem; margin: 0;">ISO 指引 v1.1</h2>
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                    <h2 style="font-size: 1.2rem; margin: 0; color: #fff; font-weight: 900;">ISO 實戰手冊</h2>
                     <button id="closeSidebar" class="close-sidebar">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <span class="badge"
-                    style="background: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.7rem;">Hsinchu
-                    x Tactical Black</span>
+                    style="background: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.7rem;">Hsinchu x Tactical Black</span>
             </div>
             <ul class="nav-list">
                 <li class="nav-item active" data-page="0">手冊封面</li>
-                <li class="nav-item" data-page="1">局長/科長的話</li>
+                <li class="nav-item" data-page="1">局長與職安科長的話</li>
                 <li class="nav-item" data-page="2">導讀與戰術視覺</li>
 
                 <li class="nav-section">第一篇：職責法規</li>
@@ -52,30 +51,27 @@
                 <li class="nav-item" data-page="10">風險平衡與安全介入</li>
                 <li class="nav-item" data-page="11">安全指令三部曲與心法</li>
                 <li class="nav-item" data-page="12">濃煙量化 VVCD 評分</li>
-                <li class="nav-item" data-page="13">VVCD 複合判讀模型</li>
-                <li class="nav-item" data-page="14">火與煙色深度判讀</li>
+                <li class="nav-item" data-page="13">建築結構判讀技巧</li>
 
                 <li class="nav-section">紅色警戒模組</li>
-                <li class="nav-item" data-page="15">建築結構倒塌預警</li>
-                <li class="nav-item" data-page="16">鐵皮工廠與化學場所</li>
-                <li class="nav-item" data-page="17">輻射場域與鋰電池 EV</li>
-                <li class="nav-item" data-page="18">人員判讀：英雄主義與體力</li>
+                <li class="nav-item" data-page="14">鐵皮工廠紅色警戒</li>
+                <li class="nav-item" data-page="15">化學場所與 SDS 監控</li>
+                <li class="nav-item" data-page="16">輻射場域與鋰電池 EV</li>
+                <li class="nav-item" data-page="17">人員判讀：英雄主義與體力</li>
 
                 <li class="nav-section">現場管理與應變</li>
-                <li class="nav-item" data-page="19">PAS 管制與外部 TIC 偵察</li>
-                <li class="nav-item" data-page="20">TIC 溫標與逃生路徑維護</li>
-                <li class="nav-item" data-page="21">MAYDAY LUNAR 與 RIT 救援</li>
-                <li class="nav-item" data-page="22">RIT 任務轉銜細節</li>
-                <li class="nav-item" data-page="23">平面圖判讀：梯開危險空間軟</li>
+                <li class="nav-item" data-page="18">管制站與外部 TIC 偵察</li>
+                <li class="nav-item" data-page="19">TIC 溫標與逃生路徑維護</li>
+                <li class="nav-item" data-page="20">MAYDAY LUNAR 與 RIT</li>
 
                 <li class="nav-section">實戰案例與檢討</li>
-                <li class="nav-item" data-page="24">115 年案例 A/B 分享</li>
-                <li class="nav-item" data-page="25">AAR 事故連鎖與文化</li>
-                <li class="nav-item" data-page="26">結語：最後的叮嚀</li>
+                <li class="nav-item" data-page="21">實戰案例 A：鐵皮火點</li>
+                <li class="nav-item" data-page="22">案例 B 與 AAR 事故檢討</li>
+                <li class="nav-item" data-page="23">結語：最後的叮嚀</li>
 
                 <li class="nav-section">實戰附錄口袋卡</li>
-                <li class="nav-item" data-page="25">附錄：ISO 現場查核口袋卡</li>
-                <li class="nav-item" data-page="26">決策：鐵皮/化學/救援</li>
+                <li class="nav-item" data-page="24">附錄：ISO 現場查核口袋卡</li>
+                <li class="nav-item" data-page="25">決策心法卡：鐵皮/化學/MAYDAY</li>
                 <li class="nav-item" data-page="28">交接：大隊 ISO 查核表</li>
             </ul>
         </aside>
