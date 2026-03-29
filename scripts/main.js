@@ -700,52 +700,48 @@ const ISO_APP = {
             this.initMermaid();
         });
 
-        // [2] Navigation Buttons (修正：解決手機端按鈕失靈問題)
+        // [2] Navigation Buttons (終極修正：確保按鈕靈敏且不衝突)
         const nextBtn = document.querySelector(this.selectors.nextBtn);
         const prevBtn = document.querySelector(this.selectors.prevBtn);
 
-        const handlePrev = (e) => {
-            if (e.cancelable) e.preventDefault();
-            e.stopPropagation(); 
-            this.flipBook.flipPrev();
-        };
-
-        const handleNext = (e) => {
+        const handleBtnAction = (direction, e) => {
             if (e.cancelable) e.preventDefault();
             e.stopPropagation();
-            this.flipBook.flipNext();
+            if (direction === 'next') this.flipBook.flipNext();
+            else this.flipBook.flipPrev();
         };
 
         if (prevBtn) {
-            // 使用 addEventListener 並同時綁定 touchstart 與 click
-            prevBtn.addEventListener('touchstart', handlePrev, { passive: false });
-            prevBtn.addEventListener('click', handlePrev);
+            prevBtn.addEventListener('touchstart', (e) => handleBtnAction('prev', e), { passive: false });
+            prevBtn.addEventListener('click', (e) => handleBtnAction('prev', e));
         }
         if (nextBtn) {
-            nextBtn.addEventListener('touchstart', handleNext, { passive: false });
-            nextBtn.addEventListener('click', handleNext);
+            nextBtn.addEventListener('touchstart', (e) => handleBtnAction('next', e), { passive: false });
+            nextBtn.addEventListener('click', (e) => handleBtnAction('next', e));
         }
 
-        // [3] Sidebar Navigation Items (修正：解決手機版無法往前跳轉的問題)
+        // [3] Sidebar Navigation Items (終極修正：解決目錄往前跳轉失敗與選單捲動問題)
         navItems.forEach(nav => {
-            const handleNav = (e) => {
+            // 【重要】：目錄項只用 click，移除 touchstart 以利目錄上下捲動不誤觸
+            nav.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
+
                 const pageNum = parseInt(nav.getAttribute('data-page'));
-                
-                // 先執行翻頁
-                this.flipBook.flip(pageNum);
-                
-                // 針對手機版：給予 250ms 緩衝再關閉選單，避免動畫衝突導致失敗
+                const currentPage = this.flipBook.getCurrentPageIndex();
+
+                // 只有當目標頁碼不同時才執行跳轉，防止重複點擊
+                if (pageNum !== currentPage) {
+                    this.flipBook.flip(pageNum);
+                }
+
+                // 針對手機版：給予足夠延遲再關閉側邊欄，確保 3D 引擎在佈局改變前完成計算
                 if (window.innerWidth <= 768) {
                     setTimeout(() => {
                         document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
-                    }, 250);
+                    }, 350); // 稍微拉長延遲，確保「往前翻」動畫順利啟動
                 }
-            };
-
-            nav.addEventListener('touchstart', handleNav, { passive: false });
-            nav.addEventListener('click', handleNav);
+            });
         });
 
         // [4] Mobile Sidebar Toggles
