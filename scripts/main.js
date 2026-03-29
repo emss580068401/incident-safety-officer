@@ -625,38 +625,39 @@ const ISO_APP = {
     },
 
     /**
-     * Initialize Mermaid diagrams
-     * 鎖定單一頁面、延遲渲染以確保翻頁後尺寸穩定，並自動重刷失敗的圖表
+     * Initialize Mermaid diagrams (手機絕對顯示版)
+     * 棄用容易在手機誤判的 clientWidth，改用套件原生的可見頁面標籤
      */
     initMermaid() {
         if (!window.mermaid) return;
 
-        // 不再嚴格限制單一 pageIdx，改為掃描所有容器並藉由 clientWidth 判斷可見性
-        // 這能完美支援單頁與雙頁（跨頁）顯示模式
-        const targets = document.querySelectorAll('.mermaid');
-        if (targets.length === 0) return;
+        // 關鍵修正 1：只針對有掛上「當前顯示 (stf__page--active)」的頁面找尋流程圖
+        const activePages = document.querySelectorAll('.stf__page--active .mermaid');
+        if (activePages.length === 0) return;
 
-        // 延遲執行，確保翻頁動畫（約 800ms）完成、DOM 顯示尺寸正常且穩定
+        // 延遲 850ms，確保翻頁動畫徹底結束
         setTimeout(() => {
-            targets.forEach(el => {
-                // 如果寬度為 0，代表此時頁面處於隱藏狀態或尚未翻轉到定位，跳過渲染以防報錯
-                if (el.clientWidth === 0) return;
-
-                // 如果先前標記過 data-processed，代表 Mermaid 曾經嘗試過
-                // 為了確保每次顯示都能正確佈局，我們清除標記並還原原始碼
+            activePages.forEach((el, index) => {
+                // 關鍵修正 2：不再檢查 clientWidth，只要是 active 頁面就強制渲染
+                
                 if (el.getAttribute('data-processed') === 'true') {
                     el.removeAttribute('data-processed');
                     const backup = el.getAttribute('data-original-content');
                     if (backup) el.innerHTML = backup;
                 }
 
-                // 備份原始內容以利後續翻回時還原 (第一次運行時執行)
                 if (!el.getAttribute('data-original-content')) {
                     el.setAttribute('data-original-content', el.innerHTML);
                 }
 
-                // 執行渲染
-                window.mermaid.init(undefined, [el]);
+                // 強制給予獨立 ID 避免衝突
+                if (!el.id) el.id = 'mermaid-chart-' + Date.now() + '-' + index;
+
+                try {
+                    window.mermaid.init(undefined, [el]);
+                } catch (error) {
+                    console.error("Mermaid 渲染失敗:", error);
+                }
             });
         }, 850);
     },

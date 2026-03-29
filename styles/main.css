@@ -353,10 +353,18 @@ th {
         padding: 0.6rem !important;
     }
 
-    /* Mermaid adjustment */
+    /* Mermaid adjustment (手機版修正) */
     .mermaid {
         padding: 0.5rem;
-        transform: scale(0.95);
-        transform-origin: top center;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        overflow-x: auto; /* 如果圖太大，允許左右滑動看圖 */
+        min-height: 250px;
+    }
+    
+    .mermaid svg {
+        max-width: 100%; /* 確保 SVG 不會撐破手機螢幕 */
+        height: auto !important;
     }
 }
