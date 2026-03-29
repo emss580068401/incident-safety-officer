@@ -739,13 +739,15 @@ const ISO_APP = {
         let startTime = 0;
         const bookElement = document.querySelector(this.selectors.book);
 
-        const handleStart = (x, y) => {
+        const handleStart = (e, x, y) => {
+            // 在手機邊緣觸碰時，若為潛在的手勢起點則不一定 preventDefault
+            // 保持原始邏輯，但為了確保能控制手勢，我們記錄下 event
             startX = x;
             startY = y;
             startTime = Date.now();
         };
 
-        const handleEnd = (x, y) => {
+        const handleEnd = (e, x, y) => {
             const deltaX = x - startX;
             const deltaY = y - startY;
             const absDeltaX = Math.abs(deltaX);
@@ -753,47 +755,51 @@ const ISO_APP = {
             const deltaTime = Date.now() - startTime;
             const screenWidth = window.innerWidth;
 
-            // 【防呆 1】如果垂直滑動幅度大於水平，代表使用者正在上下捲動閱讀長文章，忽略翻頁
+            // 【防呆 1】如果垂直滑動幅度大於水平，預防誤觸
             if (absDeltaY > absDeltaX && absDeltaY > 20) return;
 
             // 【防呆 2】判斷是否為快速動作 (< 400ms)
             if (deltaTime < 400) {
-                // [情境 1] 螢幕滑動 (Swipe)：不限起始位置，只要在螢幕任何地方水平滑動超過 30px
+                // [情境 1] 螢幕滑動 (Swipe)
                 if (absDeltaX > 30) {
+                    e.preventDefault(); // 阻止瀏覽器預設行為
                     if (deltaX > 0) {
-                        this.flipBook.flipPrev(); // 向右滑 -> 上一頁
+                        this.flipBook.flipPrev();
                     } else {
-                        this.flipBook.flipNext(); // 向左滑 -> 下一頁
+                        this.flipBook.flipNext();
                     }
                 } 
-                // [情境 2] 邊緣點擊 (Tap)：移動極小 (< 10px)，判斷是否點擊了兩側 25% 的區域
+                // [情境 2] 邊緣點擊 (Tap)
                 else if (absDeltaX < 10) {
                     const threshold = screenWidth * 0.25; 
                     if (startX < threshold) {
-                        this.flipBook.flipPrev(); // 點擊左側 25% -> 上一頁
+                        e.preventDefault();
+                        this.flipBook.flipPrev();
                     } else if (startX > screenWidth - threshold) {
-                        this.flipBook.flipNext(); // 點擊右側 25% -> 下一頁
+                        e.preventDefault();
+                        this.flipBook.flipNext();
                     }
                 }
             }
         };
 
         // --- Touch Listeners (增加 Y 軸座標抓取) ---
+        // 使用 passive: false 以允許使用 preventDefault() 禁掉系統側邊滑動
         bookElement.addEventListener('touchstart', (e) => {
-            handleStart(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: true });
+            handleStart(e, e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: false });
 
         bookElement.addEventListener('touchend', (e) => {
-            handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-        }, { passive: true });
+            handleEnd(e, e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+        }, { passive: false });
 
         // --- Mouse Listeners (Desktop Support) ---
         bookElement.addEventListener('mousedown', (e) => {
-            handleStart(e.clientX, e.clientY);
+            handleStart(e, e.clientX, e.clientY);
         });
 
         bookElement.addEventListener('mouseup', (e) => {
-            handleEnd(e.clientX, e.clientY);
+            handleEnd(e, e.clientX, e.clientY);
         });
     }
 };

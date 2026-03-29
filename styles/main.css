@@ -133,6 +133,7 @@ body {
     justify-content: center;
     perspective: 2000px;
     filter: drop-shadow(0 25px 50px rgba(0,0,0,0.5));
+    touch-action: none; /* 防止手機瀏覽器預設滑動手勢干擾 JS 翻頁 */
 }
 
 .flip-book {
@@ -243,7 +244,7 @@ th {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 50;
+    z-index: 350; /* 必須高於選單(200)與側邊欄(300)以確保觸控區域生效 */
 }
 
 .nav-btn:hover {
@@ -332,8 +333,11 @@ th {
         font-size: 1rem;
     }
 
-    #prevBtn { left: 5px; }
-    #nextBtn { right: 5px; }
+    #prevBtn { 
+        left: 2px; 
+        background: rgba(var(--primary-rgb), 0.3); /* 手機版導航點更為顯眼 */
+    }
+    #nextBtn { right: 2px; }
 
     .bottom-bar {
         padding: 0.6rem 1.5rem;
