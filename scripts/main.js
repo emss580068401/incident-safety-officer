@@ -734,8 +734,8 @@ const ISO_APP = {
      * 分離「滑動」與「點擊」邏輯，解決手機系統邊緣手勢衝突，並防範垂直捲動誤觸。
      */
     /**
-     * Side-Zone Restricted Gesture Detection (全螢幕完美控制版)
-     * 設計邏輯：左右皆可滑動/點擊翻頁。透過避開螢幕最左側 20px 邊緣，完美解決系統手勢衝突。
+     * Side-Zone Restricted Gesture Detection (終極全螢幕霸道版)
+     * 設計邏輯：移除所有邊緣限制，徹底封殺系統手勢，只要向右滑一律翻上一頁。
      */
     initGestureControl() {
         let startX = 0;
@@ -744,7 +744,10 @@ const ISO_APP = {
         let isSwiping = false;
         
         const touchTarget = document.getElementById('book-container'); 
-        document.body.style.overscrollBehaviorX = 'none'; // 隱藏原生滑動回饋
+        
+        // 【關鍵 1】：雙管齊下，徹底封殺手機瀏覽器原生的水平滑動 (Safari/Chrome 通用)
+        document.body.style.overscrollBehaviorX = 'none';
+        touchTarget.style.touchAction = 'pan-y'; // 只允許上下捲動，左右滑動全部交給我們自己的 JS
 
         const handleStart = (x, y) => {
             startX = x;
@@ -757,15 +760,12 @@ const ISO_APP = {
         touchTarget.addEventListener('touchmove', (e) => {
             if (!startX || !startY) return;
 
-            // 【關鍵 1】：如果手指從螢幕最左邊緣 (20px內) 開始滑，放行給手機系統處理歷史返回
-            if (startX < 20) return;
-
             const currentX = e.touches[0].clientX;
             const currentY = e.touches[0].clientY;
             const deltaX = Math.abs(currentX - startX);
             const deltaY = Math.abs(currentY - startY);
             
-            // 如果判定為水平滑動，立即攔截系統預設動作
+            // 如果判定為水平滑動，立即暴力攔截系統預設動作
             if (deltaX > deltaY && deltaX > 5) {
                 isSwiping = true;
                 if (e.cancelable) {
@@ -776,12 +776,6 @@ const ISO_APP = {
 
         const handleEnd = (x, y) => {
             if (!startX || !startY) return;
-
-            // 避開最左側 20px 的系統邊緣
-            if (startX < 20) {
-                startX = 0; startY = 0;
-                return;
-            }
 
             const deltaX = x - startX;
             const deltaY = y - startY;
@@ -796,9 +790,9 @@ const ISO_APP = {
                 return;
             }
 
-            // 手勢判斷 (時間放寬至 800ms)
+            // 【關鍵 2】：移除所有邊緣限制！只要手勢在 800ms 內完成就判定翻頁
             if (deltaTime < 800) {
-                // 情境 1: 明確的水平滑動
+                // 情境 1: 明確的水平滑動 (Swipe)
                 if (absDeltaX > 30) {
                     if (deltaX > 0) {
                         this.flipBook.flipPrev(); // 往右滑 -> 翻前一頁
@@ -806,7 +800,7 @@ const ISO_APP = {
                         this.flipBook.flipNext(); // 往左滑 -> 翻下一頁
                     }
                 } 
-                // 情境 2: 單純點擊兩側 30% (無滑動)
+                // 情境 2: 單純點擊兩側 30% (Tap - 無滑動)
                 else if (absDeltaX < 10 && !isSwiping) {
                     if (x < screenWidth * 0.3) {
                         this.flipBook.flipPrev(); // 點擊左邊 30% -> 翻前一頁
