@@ -516,7 +516,7 @@ const ISO_APP = {
         const vw = document.getElementById('book-container').clientWidth;
         const vh = document.getElementById('book-container').clientHeight;
         const config = this.isMobile
-            ? { width: vw, height: vh, size: "fixed", minWidth: 1200, showCover: true, useMouseEvents: true, disableFlipByClick: false, flippingTime: 400, maxShadowOpacity: 0.15, usePortrait: true, mobileScrollSupport: false }
+            ? { width: vw, height: vh, size: "fixed", minWidth: 1200, showCover: true, useMouseEvents: true, disableFlipByClick: false, flippingTime: 400, maxShadowOpacity: 0.15, usePortrait: true, mobileScrollSupport: true }
             : { width: 650, height: 950, size: "stretch", showCover: true, useMouseEvents: false, disableFlipByClick: true, flippingTime: 800 };
 
         this.flipBook = new St.PageFlip(element, config);
@@ -622,6 +622,7 @@ const ISO_APP = {
         }, { passive: true });
 
         target.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 1) return; // Allow pinch to zoom
             const dx = Math.abs(e.touches[0].clientX - startX);
             const dy = Math.abs(e.touches[0].clientY - startY);
             if (dx > dy && dx > 15) {
