@@ -233,9 +233,9 @@ th {
     transform: translateY(-50%);
     width: 65px;
     height: 65px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     color: white;
     font-size: 1.5rem;
@@ -244,7 +244,7 @@ th {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 350; /* 必須高於選單(200)與側邊欄(300)以確保觸控區域生效 */
+    z-index: 9999 !important; /* 【關鍵】：加到最大並強制覆蓋 */
 }
 
 .nav-btn:hover {
