@@ -581,6 +581,21 @@ const ISO_APP = {
         addBtnEvents(prevBtn, 'prev');
         addBtnEvents(nextBtn, 'next');
 
+        // Block StPageFlip drag in the middle 60% on mobile so users can scroll perfectly
+        const blockMiddleDrag = (e) => {
+            if (!this.isMobile) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const vw = window.innerWidth;
+            if (clientX > vw * 0.2 && clientX < vw * 0.8) {
+                e.stopPropagation();
+            }
+        };
+        document.querySelectorAll('.page').forEach(page => {
+            page.addEventListener('touchstart', blockMiddleDrag, { passive: true });
+            page.addEventListener('pointerdown', blockMiddleDrag, { passive: true });
+            page.addEventListener('mousedown', blockMiddleDrag, { passive: true });
+        });
+
         navItems.forEach(nav => {
             nav.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -623,6 +638,10 @@ const ISO_APP = {
 
         target.addEventListener('touchmove', (e) => {
             if (e.touches.length > 1) return; // Allow pinch to zoom
+            const vw = window.innerWidth;
+            // Native free scroll in the middle 60% zone without intercepting horizontal blocks
+            if (startX > vw * 0.2 && startX < vw * 0.8) return; 
+
             const dx = Math.abs(e.touches[0].clientX - startX);
             const dy = Math.abs(e.touches[0].clientY - startY);
             if (dx > dy && dx > 15) {
@@ -634,6 +653,10 @@ const ISO_APP = {
         target.addEventListener('touchend', (e) => {
             if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle, .sidebar-overlay')) return;
             if (!isSwiping) return;
+            
+            const vw = window.innerWidth;
+            if (startX > vw * 0.2 && startX < vw * 0.8) return; // Do not custom-flip if touch started in middle zone
+
             const dx = e.changedTouches[0].clientX - startX;
             if (Math.abs(dx) > 50) {
                 if (this.isFlipping) return;
