@@ -1,13 +1,3 @@
-/**
- * ISO Tactical Manual - Professional Engineer Edition v1.1
- * Refactored for Modular Maintainability and Performance
- * 
- * Modules:
- * - ISO_CONTENT: Page HTML data
- * - ISO_ENGINE: PageFlip initialization and control
- * - ISO_UI: Sidebar and Gesture handling
- */
-
 "use strict";
 
 /**
@@ -105,7 +95,7 @@ const ISO_CONTENT = [
         </div>
         <div class="card" style="margin-top: 1.5rem; border-left-color: #2563eb;">
             <h4>第二步：掌握入室名單 (PAS Integration)</h4>
-            <p style="font-size: 1.15rem;">同步各入口管制板。一定要知道「現在熱區有幾個小組？在哪？氣壓還剩多少？」如果不知道人在哪，發生 MAYDAY 你根本救不起。</p>
+            <p style="font-size: 1.15rem;">同步各入口管制板。一定要知道「現在熱區有幾個小組？在哪？氣壓還剩多少？」如果不知道人在開，發生 MAYDAY 你根本救不起。</p>
         </div>
     </div>`,
 
@@ -193,7 +183,7 @@ const ISO_CONTENT = [
             <strong>E (Evaluate)</strong> 隨時評估「風險 vs 效益」。<br>
             <strong>D (Develop)</strong> 發展安全配套（如 RIT、照明）。<br>
             <strong>I (Intervene)</strong> 果斷干預撤離或提醒。<br>
-            <strong>C (Communicate)</strong> 與指揮官 100% 同步。
+            <strong>C (Communicate)</strong> 與指揮機 100% 同步。
         </p>
     </div>`,
 
@@ -274,7 +264,7 @@ const ISO_CONTENT = [
         <h4>2. 化學工廠 (Chemical/Hazmat)</h4>
         <ul style="font-size: 1.1rem; line-height: 1.6;">
             <li>[ ] <strong>資訊確認</strong>：依 SDS 查對編號、洩漏量與特徵。</li>
-            <li>[ ] <strong>洗消驗證</strong>：確認洗消區路徑無阻礙。</li>
+            <li>[ ] <strong>洗消驗測</strong>：確認洗消區路徑無阻礙。</li>
             <li>[ ] <strong>風向監控</strong>：確保除洗消組外，人員皆在上風處。</li>
             <li>[ ] <strong>PPE 覆核</strong>：確認入室組佩戴呼吸具符合等級。</li>
         </ul>
@@ -288,7 +278,7 @@ const ISO_CONTENT = [
         <h4>3. 輻射監控場所</h4>
         <p style="font-size: 1.1rem;">三項安全監控：1.時間(限時) | 2.距離(偵檢) | 3.屏蔽(厚牆)。</p>
         <hr style="margin: 1rem 0;">
-        <h4>4. 新新能源其與電動車 (Lithium-ion / EV)</h4>
+        <h4>4. 新能源其與電動車 (Lithium-ion / EV)</h4>
         <p style="font-size: 1.1rem;">
             ● <strong>熱失控預警</strong>：鋰電池「嘶嘶」聲、噴射白煙表示即將爆裂。<br>
             ● <strong>毒氣預警</strong>：氟化氫 (HF) 劇毒，面罩嚴禁脫除。
@@ -409,7 +399,7 @@ const ISO_CONTENT = [
                 <strong style="font-size: 1.15rem;">1. 時序管理 (一五一實)</strong><br>
                 • <strong>1 Min</strong>：位址、水源、是否增派？<br>
                 • <strong>5 Min</strong>：延燒、受困、初期戰術是否有效？<br>
-                • <strong>1 Hr</strong>：戰術檢討、人員輪替、水線重整。<br>
+                • <strong>1 Hr</strong>：戰術檢討、人員輪替、水線量整。<br>
                 • <strong>Real</strong>：精確掌握入室名單、氣壓與位置。<br>
                 • <strong>Note</strong>：三級火警以上 ISO 必須<strong>專任 (不可兼任)</strong>。
             </div>
@@ -491,7 +481,7 @@ const ISO_CONTENT = [
 
     // [27] Mayday Flow
     `<div class="page centered">
-        <h2 style="font-size: 2rem; color: #b91c1c;">8. MAYDAY 生死救援決策心法卡</h2>
+        <h2 style="font-size: 2rem; color: #b91c1c;">8. MAYDAY 生知救援決策心法卡</h2>
         <div class="mermaid" style="font-size: 0.95rem; padding: 1rem; background: #fff; border-radius: 8px;">
             graph TD
                 A[聽到 MAYDAY, MAYDAY, MAYDAY] --> B[全場頻道第一優先權]
@@ -554,10 +544,6 @@ const ISO_CONTENT = [
     </div>`
 ];
 
-/**
- * ISO Manual Application Controller
- * Handles initialization, engine control, and user interactions.
- */
 const ISO_APP = {
     flipBook: null,
     selectors: {
@@ -571,321 +557,108 @@ const ISO_APP = {
         appContainer: '.app-container'
     },
 
-    /**
-     * Application Entry Point
-     */
     init() {
-        // [1] Initialize Mermaid with global settings
         if (window.mermaid) {
-            window.mermaid.initialize({
-                startOnLoad: false,
-                theme: 'dark',
-                securityLevel: 'loose',
-                themeVariables: {
-                    primaryTextColor: '#ffffff',
-                    secondaryTextColor: '#ffffff',
-                    tertiaryTextColor: '#ffffff',
-                    nodeTextColor: '#ffffff',
-                    mainBkg: '#1e293b',
-                    nodeBorder: '#cbd5e1'
-                }
-            });
+            window.mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
         }
-
         this.renderContent();
         this.initEngine();
         this.bindEvents();
-
-        // 初始頁面渲染
         this.initMermaid();
-
-        console.log("ISO Manual App Initialized Successfully.");
     },
 
-    /**
-     * Inject HTML pages into the DOM
-     */
     renderContent() {
         const container = document.querySelector(this.selectors.book);
         if (!container) return;
-        ISO_CONTENT.forEach(html => {
-            container.insertAdjacentHTML('beforeend', html);
-        });
+        ISO_CONTENT.forEach(html => container.insertAdjacentHTML('beforeend', html));
     },
 
-    /**
-     * Initialize St.PageFlip Engine with professional config
-     */
     initEngine() {
         const element = document.querySelector(this.selectors.book);
-        if (!element) return;
-
         this.flipBook = new St.PageFlip(element, {
-            width: 650,
-            height: 950,
-            size: "stretch",
-            minWidth: 320,
-            minHeight: 480,
-            maxWidth: 2000,
-            maxHeight: 2000,
-            showCover: true,
-            maxShadowOpacity: 0.2,
-            mobileScrollSupport: false,
-            usePortrait: true,
-            useMouseEvents: false,   // Manual control only for better UX
-            disableFlipByClick: true, // Prevent accidental flips in middle
-            showPageCorners: false,   // Clean tactical look
-            flippingTime: 800
+            width: 650, height: 950, size: "stretch",
+            showCover: true, useMouseEvents: false, disableFlipByClick: true, flippingTime: 800
         });
-
         this.flipBook.loadFromHTML(document.querySelectorAll('.page'));
     },
 
-    /**
-     * Initialize Mermaid diagrams (效能與相容性終極版)
-     * 解決網頁版與本機版差異，採用精確渲染且「只畫一次永久保留」的最佳化策略
-     */
     initMermaid() {
         if (!window.mermaid) return;
-
-        // 關鍵 1：只抓取「尚未被成功繪製」的流程圖。畫過一次的就放過它，節省效能！
         const targets = document.querySelectorAll('.mermaid:not([data-processed="true"])');
-        if (targets.length === 0) return;
-
-        // 延遲 850ms，確保翻頁動畫徹底結束、頁面在畫面中完全展開定位
         setTimeout(() => {
-            targets.forEach((el, index) => {
-                
-                // 關鍵 2：改用 getBoundingClientRect 取得「真實物理尺寸」
-                // 這比 offsetParent 更準確，能完美避開 LINE/FB 等內建瀏覽器的奇怪限制
+            targets.forEach((el, i) => {
                 const rect = el.getBoundingClientRect();
-                
-                // 如果寬度或高度是 0，代表這一頁目前還被隱藏著，跳過不處理
-                if (rect.width === 0 || rect.height === 0) return; 
-
-                // 強制給予獨立 ID 避免 Mermaid 繪圖衝突
-                if (!el.id) el.id = 'mermaid-chart-' + Date.now() + '-' + index;
-
-                // 執行渲染
-                try {
-                    window.mermaid.init(undefined, [el]);
-                    // 關鍵 3：標記為已處理。未來不論怎麼翻頁，SVG 都不會消失，也不會浪費效能重畫
-                    el.setAttribute('data-processed', 'true');
-                } catch (error) {
-                    console.error("Mermaid 渲染失敗:", error);
-                }
+                if (rect.width === 0 || rect.height === 0) return;
+                if (!el.id) el.id = 'mermaid-' + Date.now() + '-' + i;
+                window.mermaid.init(undefined, [el]);
+                el.setAttribute('data-processed', 'true');
             });
         }, 850);
     },
 
-    /**
-     * Centralized Event Binding
-     */
     bindEvents() {
-        const self = this;
         const pageInfo = document.querySelector(this.selectors.pageInfo);
         const navItems = document.querySelectorAll(this.selectors.navItems);
 
-        // [1] Page Flip Events
         this.flipBook.on('flip', (e) => {
-            const pageIdx = e.data;
-            if (pageInfo) pageInfo.textContent = `${pageIdx + 1} / ${ISO_CONTENT.length}`;
-
-            navItems.forEach(nav => {
-                const target = parseInt(nav.getAttribute('data-page'));
-                nav.classList.toggle('active', target === pageIdx);
-            });
-
-            // 偵測所有可見頁面的流程圖 (支援雙頁跨頁模式)
+            pageInfo.textContent = `${e.data + 1} / ${ISO_CONTENT.length}`;
+            navItems.forEach(nav => nav.classList.toggle('active', parseInt(nav.dataset.page) === e.data));
             this.initMermaid();
         });
 
-        // [2] Navigation Buttons (修正：解決按鈕與 3D 引擎指令衝突)
-        const nextBtn = document.querySelector(this.selectors.nextBtn);
-        const prevBtn = document.querySelector(this.selectors.prevBtn);
-
-        const safeFlip = (direction) => {
-            // 防止動畫重疊導致卡死
-            if (this.flipBook.getSetting().flippingTime > 800 && this.flipBook.getState() !== 'read') return;
-            
-            if (direction === 'next') this.flipBook.flipNext();
-            else this.flipBook.flipPrev();
+        // 【關鍵修正】：修正狀態檢查邏輯，確保翻頁動作不會重疊卡死
+        const safeFlip = (dir) => {
+            if (this.flipBook.getState() !== 'read') return;
+            dir === 'next' ? this.flipBook.flipNext() : this.flipBook.flipPrev();
         };
 
-        if (prevBtn) {
-            // 在手機端僅使用觸控啟動，並徹底阻斷後續冒泡
-            prevBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault(); e.stopPropagation(); safeFlip('prev');
-            }, { passive: false });
-            prevBtn.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation(); safeFlip('prev');
-            });
-        }
-        if (nextBtn) {
-            nextBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault(); e.stopPropagation(); safeFlip('next');
-            }, { passive: false });
-            nextBtn.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation(); safeFlip('next');
-            });
-        }
+        const prevBtn = document.querySelector(this.selectors.prevBtn);
+        const nextBtn = document.querySelector(this.selectors.nextBtn);
 
-        // [3] Sidebar Navigation Items (修正：解決「往前跳轉」失敗的問題)
+        // 統一使用觸控與點擊雙重監控
+        const handlePrev = (e) => { e.preventDefault(); e.stopPropagation(); safeFlip('prev'); };
+        const handleNext = (e) => { e.preventDefault(); e.stopPropagation(); safeFlip('next'); };
+
+        prevBtn.addEventListener('touchstart', handlePrev, { passive: false });
+        prevBtn.addEventListener('click', handlePrev);
+        nextBtn.addEventListener('touchstart', handleNext, { passive: false });
+        nextBtn.addEventListener('click', handleNext);
+
         navItems.forEach(nav => {
             nav.addEventListener('click', (e) => {
                 e.preventDefault();
-                e.stopPropagation();
-
-                const pageNum = parseInt(nav.getAttribute('data-page'));
-                
-                // 強制下達跳轉指令，不論前後
-                this.flipBook.flip(pageNum);
-
+                this.flipBook.flip(parseInt(nav.dataset.page));
                 if (window.innerWidth <= 768) {
-                    setTimeout(() => {
-                        document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
-                    }, 300);
+                    setTimeout(() => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open'), 350);
                 }
             });
         });
 
-        // [4] Mobile Sidebar Toggles
-        const toggle = document.querySelector(this.selectors.menuToggle);
-        const close = document.querySelector(this.selectors.closeSidebar);
-        const container = document.querySelector(this.selectors.appContainer);
-
-        if (toggle) toggle.onclick = () => container.classList.add('sidebar-open');
-        if (close) close.onclick = () => container.classList.remove('sidebar-open');
-
-        // [5] Close sidebar on background click
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768 &&
-                container.classList.contains('sidebar-open') &&
-                !e.target.closest('.sidebar') &&
-                !e.target.closest(this.selectors.menuToggle)) {
-                container.classList.remove('sidebar-open');
-            }
-        });
-
-        // [6] Handlers for Gestures and Resize
+        document.querySelector(this.selectors.menuToggle).onclick = () => document.querySelector(this.selectors.appContainer).classList.add('sidebar-open');
+        document.querySelector(this.selectors.closeSidebar).onclick = () => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
+        
         this.initGestureControl();
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                container.classList.remove('sidebar-open');
-            }
-        });
     },
 
-    /**
-     * Side-Zone Restricted Gesture Detection
-     * Supports both Mouse and Touch events for cross-platform side-zone flipping.
-     */
-    /**
-     * Side-Zone Restricted Gesture Detection (Optimized for Mobile)
-     * 分離「滑動」與「點擊」邏輯，解決手機系統邊緣手勢衝突，並防範垂直捲動誤觸。
-     */
-    /**
-     * Side-Zone Restricted Gesture Detection (終極全螢幕霸道版)
-     * 設計邏輯：移除所有邊緣限制，徹底封殺系統手勢，只要向右滑一律翻上一頁。
-     */
     initGestureControl() {
-        let startX = 0;
-        let startY = 0;
-        let startTime = 0;
-        let isSwiping = false;
-        
-        const touchTarget = document.getElementById('book-container'); 
-        
-        // 【關鍵 1】：雙管齊下，徹底封殺手機瀏覽器原生的水平滑動 (Safari/Chrome 通用)
+        let startX = 0, startY = 0, isSwiping = false;
+        const target = document.getElementById('book-container');
         document.body.style.overscrollBehaviorX = 'none';
-        touchTarget.style.touchAction = 'pan-y'; // 只允許上下捲動，左右滑動全部交給我們自己的 JS
+        target.style.touchAction = 'pan-y';
 
-        const handleStart = (x, y) => {
-            startX = x;
-            startY = y;
-            startTime = Date.now();
-            isSwiping = false;
-        };
-
-        // 攔截 touchmove：強制沒收系統滑動權，保證翻書順暢
-        touchTarget.addEventListener('touchmove', (e) => {
-            if (!startX || !startY) return;
-
-            const currentX = e.touches[0].clientX;
-            const currentY = e.touches[0].clientY;
-            const deltaX = Math.abs(currentX - startX);
-            const deltaY = Math.abs(currentY - startY);
-            
-            // 如果判定為水平滑動，立即暴力攔截系統預設動作
-            if (deltaX > deltaY && deltaX > 5) {
-                isSwiping = true;
-                if (e.cancelable) {
-                    e.preventDefault(); 
-                }
-            }
+        target.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, { passive: true });
+        target.addEventListener('touchmove', (e) => {
+            const dx = Math.abs(e.touches[0].clientX - startX), dy = Math.abs(e.touches[0].clientY - startY);
+            if (dx > dy && dx > 10) { isSwiping = true; if (e.cancelable) e.preventDefault(); }
         }, { passive: false });
-
-        const handleEnd = (x, y) => {
-            if (!startX || !startY) return;
-
-            // 【關鍵修正】：如果點擊的起點是在按鈕或側邊欄上，手勢程式碼直接「放手」，交給 UI 處理
-            if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle')) {
-                startX = 0; startY = 0;
-                return;
-            }
-
-            const deltaX = x - startX;
-            const deltaY = y - startY;
-            const absDeltaX = Math.abs(deltaX);
-            const absDeltaY = Math.abs(deltaY);
-            const deltaTime = Date.now() - startTime;
-            const screenWidth = window.innerWidth;
-
-            // 垂直捲動防呆
-            if (absDeltaY > absDeltaX && absDeltaY > 15) {
-                startX = 0; startY = 0;
-                return;
-            }
-
-            if (deltaTime < 800) {
-                if (absDeltaX > 30) {
-                    if (deltaX > 0) this.flipBook.flipPrev();
-                    else this.flipBook.flipNext();
-                } 
-                else if (absDeltaX < 10 && !isSwiping) {
-                    // 【關鍵修正】：縮小點擊翻頁判定，避免誤觸
-                    if (x < screenWidth * 0.2) this.flipBook.flipPrev();
-                    else if (x > screenWidth * 0.8) this.flipBook.flipNext();
-                }
-            }
-            startX = 0; startY = 0;
-        };
-
-        // --- Touch Listeners ---
-        touchTarget.addEventListener('touchstart', (e) => {
-            handleStart(e.touches[0].clientX, e.touches[0].clientY);
+        target.addEventListener('touchend', (e) => {
+            // UI 避讓：如果在按鈕上則不執行手勢
+            if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle')) return;
+            const dx = e.changedTouches[0].clientX - startX;
+            if (isSwiping && Math.abs(dx) > 40) dx > 0 ? this.flipBook.flipPrev() : this.flipBook.flipNext();
+            isSwiping = false;
         }, { passive: true });
-
-        touchTarget.addEventListener('touchend', (e) => {
-            handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-        }, { passive: true });
-        
-        touchTarget.addEventListener('touchcancel', (e) => {
-            handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-        }, { passive: true });
-
-        // --- Mouse Listeners ---
-        touchTarget.addEventListener('mousedown', (e) => {
-            handleStart(e.clientX, e.clientY);
-        });
-
-        touchTarget.addEventListener('mouseup', (e) => {
-            handleEnd(e.clientX, e.clientY);
-        });
     }
 };
 
-/**
- * Entry Point Execution
- */
 window.onload = () => ISO_APP.init();
