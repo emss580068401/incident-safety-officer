@@ -11,7 +11,21 @@
     <!-- StPageFlip 3D Engine -->
     <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
     <script>
-        mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'loose' });
+        // 將 startOnLoad 改為 false，後續由 JS 動態控制渲染時機
+        mermaid.initialize({ 
+            startOnLoad: false, 
+            theme: 'dark', 
+            securityLevel: 'loose',
+            themeVariables: {
+                primaryTextColor: '#ffffff',
+                secondaryTextColor: '#ffffff',
+                tertiaryTextColor: '#ffffff',
+                nodeTextColor: '#ffffff',
+                mainBkg: '#1e293b',
+                nodeBorder: '#cbd5e1',
+                fontSize: '22px'
+            }
+        });
     </script>
 </head>
 <body>

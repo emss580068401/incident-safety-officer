@@ -436,7 +436,7 @@ const ISO_CONTENT = [
     // [25] Iron Flow
     `<div class="page centered">
         <h2 style="font-size: 2rem; color: #b91c1c;">6. 鐵皮工廠 ISO 現場決策心法卡</h2>
-        <div class="mermaid" style="font-size: 0.85rem; padding: 1rem; background: #fff; border-radius: 8px;">
+        <div class="mermaid" style="font-size: 1.6rem; padding: 1rem; background: #fff; border-radius: 8px;">
             graph TD
                 A[抵達鐵皮廠房火警] --> B[開始 360 度環繞觀測]
                 B --> C{觀察外牆與屋頂特徵}
@@ -452,9 +452,9 @@ const ISO_CONTENT = [
                 F --> L{作業滿 60 分鐘?}
                 L -->|是| M[提早準備第二梯重整]
                 L -->|否| N[定時 15min 氣壓與體力監控]
-                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff;
-                classDef warning fill:#fc8,stroke:#f90,stroke-width:2px;
-                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px;
+                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff,font-size:26px;
+                classDef warning fill:#fc8,stroke:#f90,stroke-width:2px,color:#fff,font-size:26px;
+                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff,font-size:26px;
                 class D,E,G,H,I,J,K danger;
                 class B,C,L,M warning;
                 class F,N safe;
@@ -464,7 +464,7 @@ const ISO_CONTENT = [
     // [26] Chem Flow
     `<div class="page centered">
         <h2 style="font-size: 2rem; color: #1e293b;">7. 化學工廠 ISO 現場決策心法卡</h2>
-        <div class="mermaid" style="font-size: 0.85rem; padding: 1rem; background: #fff; border-radius: 8px;">
+        <div class="mermaid" style="font-size: 1.6rem; padding: 1rem; background: #fff; border-radius: 8px;">
             graph TD
                 A[抵達化學/不明場所火警] --> B{第一動作: 取得 SDS?}
                 B -->|未取得 / 標示不清| C[執行法 21-2: 資訊權]
@@ -477,12 +477,12 @@ const ISO_CONTENT = [
                 I --> J{防護等級符合危害?}
                 J -->|否| K[下令撤換裝備或停止作業]
                 J -->|是| L[進入熱區, 嚴格計時管理]
-                L --> M{洩漏擴擴散/風向改變?}
+                L --> M{洩漏擴散/風向改變?}
                 M -->|是| N[重新劃定冷/暖/熱特區]
                 M -->|否| O[持續監測洩漏源與人員體能]
-                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff;
-                classDef chemical fill:#d4f,stroke:#90c,stroke-width:2px,color:#fff;
-                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px;
+                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff,font-size:26px;
+                classDef chemical fill:#d4f,stroke:#90c,stroke-width:2px,color:#fff,font-size:26px;
+                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff,font-size:26px;
                 class C,D,E,H,K,N danger;
                 class B,F,G,I,J,M chemical;
                 class L,O safe;
@@ -492,7 +492,7 @@ const ISO_CONTENT = [
     // [27] Mayday Flow
     `<div class="page centered">
         <h2 style="font-size: 2rem; color: #b91c1c;">8. MAYDAY 生死救援決策心法卡</h2>
-        <div class="mermaid" style="font-size: 0.85rem; padding: 1rem; background: #fff; border-radius: 8px;">
+        <div class="mermaid" style="font-size: 0.95rem; padding: 1rem; background: #fff; border-radius: 8px;">
             graph TD
                 A[聽到 MAYDAY, MAYDAY, MAYDAY] --> B[全場頻道第一優先權]
                 B --> C{取得 LUNAR 資訊?}
@@ -509,9 +509,9 @@ const ISO_CONTENT = [
                 L --> M{火勢延燒/建築崩塌威脅救援?}
                 M -->|是| N[宣告長按三長聲氣笛<br/>啟動緊急逃生]
                 M -->|否| O[全力掩護 RIT 救援行動]
-                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff;
-                classDef action fill:#d4f,stroke:#90c,stroke-width:2px,color:#fff;
-                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px;
+                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff,font-size:20px;
+                classDef action fill:#d4f,stroke:#90c,stroke-width:2px,color:#fff,font-size:20px;
+                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff,font-size:20px;
                 class D,I,J,M,N danger;
                 class C,E,F,G,H,K action;
                 class A,B,L,O safe;
@@ -578,7 +578,10 @@ const ISO_APP = {
         this.renderContent();
         this.initEngine();
         this.bindEvents();
+
+        // 初次加載渲染所有可見頁面
         this.initMermaid();
+
         console.log("ISO Manual App Initialized Successfully.");
     },
 
@@ -623,11 +626,39 @@ const ISO_APP = {
 
     /**
      * Initialize Mermaid diagrams
+     * 鎖定單一頁面、延遲渲染以確保翻頁後尺寸穩定，並自動重刷失敗的圖表
      */
     initMermaid() {
-        if (window.mermaid) {
-            window.mermaid.init(undefined, document.querySelectorAll('.mermaid'));
-        }
+        if (!window.mermaid) return;
+
+        // 不再嚴格限制單一 pageIdx，改為掃描所有容器並藉由 clientWidth 判斷可見性
+        // 這能完美支援單頁與雙頁（跨頁）顯示模式
+        const targets = document.querySelectorAll('.mermaid');
+        if (targets.length === 0) return;
+
+        // 延遲執行，確保翻頁動畫（約 800ms）完成、DOM 顯示尺寸正常且穩定
+        setTimeout(() => {
+            targets.forEach(el => {
+                // 如果寬度為 0，代表此時頁面處於隱藏狀態或尚未翻轉到定位，跳過渲染以防報錯
+                if (el.clientWidth === 0) return;
+
+                // 如果先前標記過 data-processed，代表 Mermaid 曾經嘗試過
+                // 為了確保每次顯示都能正確佈局，我們清除標記並還原原始碼
+                if (el.getAttribute('data-processed') === 'true') {
+                    el.removeAttribute('data-processed');
+                    const backup = el.getAttribute('data-original-content');
+                    if (backup) el.innerHTML = backup;
+                }
+
+                // 備份原始內容以利後續翻回時還原 (第一次運行時執行)
+                if (!el.getAttribute('data-original-content')) {
+                    el.setAttribute('data-original-content', el.innerHTML);
+                }
+
+                // 執行渲染
+                window.mermaid.init(undefined, [el]);
+            });
+        }, 850);
     },
 
     /**
@@ -648,6 +679,7 @@ const ISO_APP = {
                 nav.classList.toggle('active', target === pageIdx);
             });
 
+            // 偵測所有可見頁面的流程圖 (支援雙頁跨頁模式)
             this.initMermaid();
         });
 
@@ -697,50 +729,71 @@ const ISO_APP = {
      * Side-Zone Restricted Gesture Detection
      * Supports both Mouse and Touch events for cross-platform side-zone flipping.
      */
+    /**
+     * Side-Zone Restricted Gesture Detection (Optimized for Mobile)
+     * 分離「滑動」與「點擊」邏輯，解決手機系統邊緣手勢衝突，並防範垂直捲動誤觸。
+     */
     initGestureControl() {
         let startX = 0;
+        let startY = 0;
         let startTime = 0;
         const bookElement = document.querySelector(this.selectors.book);
 
-        const handleStart = (x) => {
+        const handleStart = (x, y) => {
             startX = x;
+            startY = y;
             startTime = Date.now();
         };
 
-        const handleEnd = (x) => {
+        const handleEnd = (x, y) => {
             const deltaX = x - startX;
+            const deltaY = y - startY;
+            const absDeltaX = Math.abs(deltaX);
+            const absDeltaY = Math.abs(deltaY);
             const deltaTime = Date.now() - startTime;
             const screenWidth = window.innerWidth;
-            const threshold = screenWidth * 0.2; // 20% active zone
 
-            // Fast gesture or tap/click (< 300ms)
-            if (deltaTime < 300) {
-                if (startX < threshold) {
-                    // Left Edge -> Previous
-                    if (deltaX > 30 || Math.abs(deltaX) < 10) this.flipBook.flipPrev();
-                } else if (startX > screenWidth - threshold) {
-                    // Right Edge -> Next
-                    if (deltaX < -30 || Math.abs(deltaX) < 10) this.flipBook.flipNext();
+            // 【防呆 1】如果垂直滑動幅度大於水平，代表使用者正在上下捲動閱讀長文章，忽略翻頁
+            if (absDeltaY > absDeltaX && absDeltaY > 20) return;
+
+            // 【防呆 2】判斷是否為快速動作 (< 400ms)
+            if (deltaTime < 400) {
+                // [情境 1] 螢幕滑動 (Swipe)：不限起始位置，只要在螢幕任何地方水平滑動超過 30px
+                if (absDeltaX > 30) {
+                    if (deltaX > 0) {
+                        this.flipBook.flipPrev(); // 向右滑 -> 上一頁
+                    } else {
+                        this.flipBook.flipNext(); // 向左滑 -> 下一頁
+                    }
+                } 
+                // [情境 2] 邊緣點擊 (Tap)：移動極小 (< 10px)，判斷是否點擊了兩側 25% 的區域
+                else if (absDeltaX < 10) {
+                    const threshold = screenWidth * 0.25; 
+                    if (startX < threshold) {
+                        this.flipBook.flipPrev(); // 點擊左側 25% -> 上一頁
+                    } else if (startX > screenWidth - threshold) {
+                        this.flipBook.flipNext(); // 點擊右側 25% -> 下一頁
+                    }
                 }
             }
         };
 
-        // --- Touch Listeners ---
+        // --- Touch Listeners (增加 Y 軸座標抓取) ---
         bookElement.addEventListener('touchstart', (e) => {
-            handleStart(e.touches[0].clientX);
+            handleStart(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: true });
 
         bookElement.addEventListener('touchend', (e) => {
-            handleEnd(e.changedTouches[0].clientX);
+            handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
         }, { passive: true });
 
         // --- Mouse Listeners (Desktop Support) ---
         bookElement.addEventListener('mousedown', (e) => {
-            handleStart(e.clientX);
+            handleStart(e.clientX, e.clientY);
         });
 
         bookElement.addEventListener('mouseup', (e) => {
-            handleEnd(e.clientX);
+            handleEnd(e.clientX, e.clientY);
         });
     }
 };
