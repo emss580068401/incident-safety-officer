@@ -700,19 +700,52 @@ const ISO_APP = {
             this.initMermaid();
         });
 
-        // [2] Navigation Buttons
-        document.querySelector(this.selectors.nextBtn).onclick = () => this.flipBook.flipNext();
-        document.querySelector(this.selectors.prevBtn).onclick = () => this.flipBook.flipPrev();
+        // [2] Navigation Buttons (修正：解決手機端按鈕失靈問題)
+        const nextBtn = document.querySelector(this.selectors.nextBtn);
+        const prevBtn = document.querySelector(this.selectors.prevBtn);
 
-        // [3] Sidebar Navigation Items
+        const handlePrev = (e) => {
+            if (e.cancelable) e.preventDefault();
+            e.stopPropagation(); 
+            this.flipBook.flipPrev();
+        };
+
+        const handleNext = (e) => {
+            if (e.cancelable) e.preventDefault();
+            e.stopPropagation();
+            this.flipBook.flipNext();
+        };
+
+        if (prevBtn) {
+            // 使用 addEventListener 並同時綁定 touchstart 與 click
+            prevBtn.addEventListener('touchstart', handlePrev, { passive: false });
+            prevBtn.addEventListener('click', handlePrev);
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('touchstart', handleNext, { passive: false });
+            nextBtn.addEventListener('click', handleNext);
+        }
+
+        // [3] Sidebar Navigation Items (修正：解決手機版無法往前跳轉的問題)
         navItems.forEach(nav => {
-            nav.onclick = () => {
+            const handleNav = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const pageNum = parseInt(nav.getAttribute('data-page'));
+                
+                // 先執行翻頁
                 this.flipBook.flip(pageNum);
+                
+                // 針對手機版：給予 250ms 緩衝再關閉選單，避免動畫衝突導致失敗
                 if (window.innerWidth <= 768) {
-                    document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
+                    setTimeout(() => {
+                        document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
+                    }, 250);
                 }
             };
+
+            nav.addEventListener('touchstart', handleNav, { passive: false });
+            nav.addEventListener('click', handleNav);
         });
 
         // [4] Mobile Sidebar Toggles
