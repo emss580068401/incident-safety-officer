@@ -1,26 +1,19 @@
 "use strict";
 
-/**
- * Page Content Database
- * Contains the verbatim restoration of the ISO Manual content.
- */
 const ISO_CONTENT = [
-    // [0] Cover
     `<div class="page cover" style="padding: 0; background: #020617;">
-        <div style="height: 100%; width: 100%; position: relative;">
+        <div style="height: 100%; width: 100%; position: relative; overflow: hidden;">
             <img src="assets/cover.jpg" style="width: 100%; height: 65%; object-fit: cover;">
-            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 45%; 
-                        background: linear-gradient(transparent, #020617 80%); padding: 2rem 3.5rem; 
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
+                        background: linear-gradient(transparent, #020617 80%); padding: 2rem 3.5rem;
                         display: flex; flex-direction: column; justify-content: flex-end;">
-                <h1 style="font-size: 3.2rem; font-weight: 900; line-height: 1.1; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 0.5rem;">事故安全官<br>實戰指引 v1.1</h1>
+                <h1 style="font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.1; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 0.5rem;">事故安全官<br>實戰指引 v1.1</h1>
                 <div style="border-top: 4px solid var(--primary); margin-top: 0.8rem; padding-top: 0.8rem;">
-                    <p style="font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 0;">新竹縣政府消防局 職安科</p>
+                    <p style="font-size: clamp(0.9rem, 2vw, 1.2rem); font-weight: 700; color: #fff; margin-bottom: 0;">新竹縣政府消防局 職安科</p>
                 </div>
             </div>
         </div>
     </div>`,
-
-    // [1] Chief & Sec Chief Words
     `<div class="page">
         <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #b91c1c;">【局長的話】</h2>
         <div class="quote-box" style="border: 2px solid var(--primary); background: #fef2f2; padding: 1rem; margin-bottom: 1.5rem;">
@@ -37,8 +30,6 @@ const ISO_CONTENT = [
             <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 職安科科長</p>
         </div>
     </div>`,
-
-    // [2] Preface
     `<div class="page">
         <h2 style="font-size: 2rem; color: #b91c1c; margin-bottom: 1.5rem;">導讀：學長告訴你，為什麼這份手冊能救命？</h2>
         <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 1.5rem;">
@@ -49,8 +40,6 @@ const ISO_CONTENT = [
         </p>
         <img src="assets/iso_intro.png" style="width: 100%; border-radius: 8px; margin-top: 1.5rem;">
     </div>`,
-
-    // [3] ICS Positioning
     `<div class="page">
         <h2 style="font-size: 1.8rem; margin-bottom: 2rem;">第一篇：職能體系與法規</h2>
         <h3>第一章：誰才是老大？事故安全官在 ICS 中的定位</h3>
@@ -67,8 +56,6 @@ const ISO_CONTENT = [
             <li><strong>事故安全官 (ISO)</strong>：看的是「人員風險」，想著大家能不能活著撤。</li>
         </ul>
     </div>`,
-
-    // [4] Timing
     `<div class="page">
         <h4>1.2 什麼時候該你上場？(啟動時機)</h4>
         <div class="card" style="font-size: 1.2rem; line-height: 1.7;">
@@ -84,8 +71,6 @@ const ISO_CONTENT = [
             ● <strong>調查權</strong>：事後 AAR 時，ISO 的現場紀錄是核心資料。
         </p>
     </div>`,
-
-    // [5] Step 1 & 2
     `<div class="page">
         <h2>第二章：抵達現場的「黃金六步驟」</h2>
         <p style="font-size: 1.1rem;">一個專業的安全官，頭 10 分鐘的動作決定了接下來 2 小時的安全。</p>
@@ -98,8 +83,6 @@ const ISO_CONTENT = [
             <p style="font-size: 1.15rem;">同步各入口管制板。一定要知道「現在熱區有幾個小組？在哪？氣壓還剩多少？」如果不知道人在開，發生 MAYDAY 你根本救不起。</p>
         </div>
     </div>`,
-
-    // [6] Step 3: 360 Recon
     `<div class="page">
         <h4>第三步：360 度環繞偵察 (360 Reconnaissance)</h4>
         <p style="font-size: 1.2rem; font-weight: bold; background: #fee2e2; padding: 0.5rem;">你必須繞建築物一圈，不能只看正面。</p>
@@ -110,8 +93,6 @@ const ISO_CONTENT = [
             <tr><td style="color: #b91c1c; font-weight: bold;">Side C (背面)</td><td><strong>最重要！救援死角。</strong> 去看後門是否反鎖？有沒有坍塌徵兆？有沒有人困在後窗？</td></tr>
         </table>
     </div>`,
-
-    // [7] Step 4 & 5
     `<div class="page">
         <h4>第四步：與指揮官進行「初次安全簡報」</h4>
         <p style="font-size: 1.1rem;">完成 360 度查勘後，填寫表單中的簡報欄位。點出致命危機（閃燃、倒塌），提出建議，確保指揮戰術與你眼中的風險沒有落差。</p>
@@ -121,8 +102,6 @@ const ISO_CONTENT = [
         </div>
         <img src="assets/rehab_center.png" style="width: 100%; border-radius: 8px; margin-top: 1rem;">
     </div>`,
-
-    // [8] Step 6
     `<div class="page">
         <h4>第六步：持續監控變化與果斷介入</h4>
         <p style="font-size: 1.15rem;">持續追蹤時間、危險。火場是動態的，你的觀察必須以第一次環場為基準，去比較現場的<strong>「變化量」</strong>。</p>
@@ -132,8 +111,6 @@ const ISO_CONTENT = [
             </p>
         </div>
     </div>`,
-
-    // [9] DRA
     `<div class="page">
         <h2>第三章：動態風險評估 (DRA) 與權限</h2>
         <div class="quote-box" style="border: 4px solid var(--primary); background: #f8fafc; padding: 1.5rem; margin-bottom: 2rem;">
@@ -150,8 +127,6 @@ const ISO_CONTENT = [
             <li><strong>決定實施 (Do)</strong>：下達指令並觀察後果。</li>
         </ol>
     </div>`,
-
-    // [10] Risk Balance
     `<div class="page">
         <h4>3.2 ISO 的核心決定能率：風險平衡</h4>
         <ul style="font-size: 1.22rem; line-height: 2; list-style: none; padding: 0;">
@@ -166,8 +141,6 @@ const ISO_CONTENT = [
             <strong>學長提示：</strong> ISO 是唯一可以「不需要為了打火」而思考的人。你要負責說出大家都不敢說的那句「不划算」。
         </div>
     </div>`,
-
-    // [11] MEDIC
     `<div class="page">
         <h4>3.3 安全指令三部曲：當你必須「踩煞車」</h4>
         <div style="font-size: 1.1rem; line-height: 1.6;">
@@ -186,8 +159,6 @@ const ISO_CONTENT = [
             <strong>C (Communicate)</strong> 與指揮機 100% 同步。
         </p>
     </div>`,
-
-    // [12] Smoke Reading
     `<div class="page">
         <div style="background: #020617; color: #fff; padding: 1rem 1.5rem; border-radius: 6px; font-size: 1.1rem; margin-bottom: 2rem; font-weight: 900; letter-spacing: 2px;">
             任務流程：1.煙判讀VVDC(或平面圖判讀) ➔ 2.持續監測 ➔ 3.介入回報
@@ -195,11 +166,7 @@ const ISO_CONTENT = [
         <h2 style="font-size: 2.5rem; color: #b91c1c; margin-bottom: 1.5rem;">第四章：煙判讀 VVCD 評分看板</h2>
         <table style="font-size: 1.2rem; line-height: 1.55; border: 2px solid #cbd5e1; margin-bottom: 1rem; width: 100%;">
             <tr style="background: #1e293b; color: #fff; text-align: center;">
-                <th width="12%">分數</th>
-                <th width="22%">V (體積)</th>
-                <th width="22%">V (流速)</th>
-                <th width="22%">D (密度)</th>
-                <th width="22%">C (顏色)</th>
+                <th width="12%">分數</th><th width="22%">V (體積)</th><th width="22%">V (流速)</th><th width="22%">D (密度)</th><th width="22%">C (顏色)</th>
             </tr>
             <tr>
                 <td style="font-weight: bold; background: #f1f5f9; text-align: center; font-size: 1.1rem;">戰術<br>解讀</td>
@@ -209,19 +176,11 @@ const ISO_CONTENT = [
                 <td style="vertical-align: top; padding: 1.2rem;">得知<strong style="color: #b91c1c;">到火距離</strong>及<strong style="color: #b91c1c;">隱蔽空間延燒</strong>。</td>
             </tr>
             <tr style="text-align: center; font-weight: 900; background: #fef2f2;">
-                <td style="font-size: 1.8rem; color: #b91c1c;">2</td>
-                <td style="font-size: 1.6rem;">大</td>
-                <td style="font-size: 1.6rem;">快</td>
-                <td style="font-size: 1.6rem;">厚</td>
-                <td rowspan="2" style="vertical-align: middle; padding: 0.5rem; font-size: 0.95rem; font-weight: normal; background: #fff;">
-                    白(乾熱)➔棕(木材)<br>灰(合成)➔黑(全盛)
-                </td>
+                <td style="font-size: 1.8rem; color: #b91c1c;">2</td><td style="font-size: 1.6rem;">大</td><td style="font-size: 1.6rem;">快</td><td style="font-size: 1.6rem;">厚</td>
+                <td rowspan="2" style="vertical-align: middle; padding: 0.5rem; font-size: 0.95rem; font-weight: normal; background: #fff;">白(乾熱)➔棕(木材)<br>灰(合成)➔黑(全盛)</td>
             </tr>
             <tr style="text-align: center; font-weight: 900;">
-                <td style="font-size: 1.8rem;">1</td>
-                <td style="font-size: 1.6rem;">小</td>
-                <td style="font-size: 1.6rem;">慢</td>
-                <td style="font-size: 1.6rem;">薄</td>
+                <td style="font-size: 1.8rem;">1</td><td style="font-size: 1.6rem;">小</td><td style="font-size: 1.6rem;">慢</td><td style="font-size: 1.6rem;">薄</td>
             </tr>
         </table>
         <div class="card" style="margin-top: 1rem; border-left: 10px solid #b91c1c; padding: 1.5rem; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -230,8 +189,6 @@ const ISO_CONTENT = [
             </p>
         </div>
     </div>`,
-
-    // [13] Structure
     `<div class="page">
         <h2 style="font-size: 2rem;">第五章：建築結構判讀</h2>
         <p style="font-size: 1.1rem;">建築物的材質決定了它受熱後的「剩餘時間」。</p>
@@ -244,8 +201,6 @@ const ISO_CONTENT = [
         </table>
         <img src="assets/iron_warning.png" style="width: 100%; border-radius: 8px; margin-top: 1.5rem;">
     </div>`,
-
-    // [14] Red Flags: Iron
     `<div class="page">
         <h2>情境查核模組：ISO 的「紅色警戒」</h2>
         <h4>1. 鐵皮工廠 (Metal Structure)</h4>
@@ -258,8 +213,6 @@ const ISO_CONTENT = [
             「無線電範例：Side B 牆面已漆黑變色，劃定 10 公尺倒塌警戒區，非必要人員勿近。」
         </p>
     </div>`,
-
-    // [15] Red Flags: Chem
     `<div class="page">
         <h4>2. 化學工廠 (Chemical/Hazmat)</h4>
         <ul style="font-size: 1.1rem; line-height: 1.6;">
@@ -272,8 +225,6 @@ const ISO_CONTENT = [
             「無線電範例：該化學品具水反應性，建議停止水霧，改用泡沫。洗消區已設置待命。」
         </div>
     </div>`,
-
-    // [16] Red Flags: Rad & EV
     `<div class="page">
         <h4>3. 輻射監控場所</h4>
         <p style="font-size: 1.1rem;">三項安全監控：1.時間(限時) | 2.距離(偵檢) | 3.屏蔽(厚牆)。</p>
@@ -287,8 +238,6 @@ const ISO_CONTENT = [
             <strong>核心決策：</strong> 若水源供不應求，安官應建議 IC「隔離延燒、防禦戰術」，而非強攻。
         </div>
     </div>`,
-
-    // [17] People
     `<div class="page">
         <h2>第六章：人員判讀——預防「英雄主義」</h2>
         <p style="font-size: 1.1rem;">消防員最大的敵人不是火，是自己的「體能極限」跟「大腦疲勞」。</p>
@@ -301,8 +250,6 @@ const ISO_CONTENT = [
             當氣壓降到 100 bar (而非等到響笛)，ISO 就開始預警撤退，確保他們能走出迷宮。
         </p>
     </div>`,
-
-    // [18] PAS & TIC
     `<div class="page">
         <h2>第七章：進階現場控管</h2>
         <h4>7.1 管制站 (Control Point) 防禦架構</h4>
@@ -315,16 +262,12 @@ const ISO_CONTENT = [
             ● <strong>看深度</strong>：暗紅色積熱提醒入室組注意熱回饋。
         </p>
     </div>`,
-
-    // [19] TIC Table
     `<div class="page">
         <h2 style="font-size: 2.4rem; margin-bottom: 2rem; border-bottom: 4px solid var(--primary); padding-bottom: 0.5rem;">TIC 溫標與逃生路徑維護</h2>
         <h4 style="font-size: 1.4rem;">TIC 色彩與溫度危害對照表</h4>
         <table style="font-size: 1.25rem; line-height: 1.8; border-collapse: collapse; margin-bottom: 2rem;">
             <tr style="background: #1e293b; color: #fff; text-align: center;">
-                <th style="padding: 1rem;">色彩顯示</th>
-                <th style="padding: 1rem;">預估溫度</th>
-                <th style="padding: 1rem;">現場含意</th>
+                <th style="padding: 1rem;">色彩顯示</th><th style="padding: 1rem;">預估溫度</th><th style="padding: 1rem;">現場含意</th>
             </tr>
             <tr><td style="padding: 1.2rem; font-weight: bold; background: #f1f5f9;">黑/灰色階</td><td style="padding: 1.2rem; text-align: center;">< 150°C</td><td style="padding: 1.2rem;">背景溫度 / 蓄熱初期</td></tr>
             <tr><td style="padding: 1.2rem; font-weight: bold; color: #f59e0b; background: #fffbeb;">亮黃/橘黃</td><td style="padding: 1.2rem; text-align: center;">150 ~ 300°C</td><td style="padding: 1.2rem;">警告高熱輻射 / 閃燃期</td></tr>
@@ -336,8 +279,6 @@ const ISO_CONTENT = [
             2. <strong>障礙掃除</strong>：水線、雜物不得絆腳，動線「一路暢通」。</p>
         </div>
     </div>`,
-
-    // [20] MAYDAY LUNAR
     `<div class="page">
         <h2>第八章：當無線電傳來 MAYDAY 時</h2>
         <div class="card" style="background: var(--primary); color: #fff; padding: 1.5rem;">
@@ -352,8 +293,6 @@ const ISO_CONTENT = [
             3. 封鎖頻道，維持主頻道給救援小組。
         </p>
     </div>`,
-
-    // [21] Retreat & Case A
     `<div class="page">
         <h4>8.3 撤退信號：長笛三聲</h4>
         <p style="font-size: 1.15rem; background: #fee2e2; padding: 1rem;">
@@ -366,8 +305,6 @@ const ISO_CONTENT = [
             側邊浪板異常變色，ISO 堅持建議暫停入室。撤出後 5 分鐘發生坍陷。結論：只有你在看「結構」。
         </div>
     </div>`,
-
-    // [22] Case B & Ch 10
     `<div class="page">
         <div class="card" style="border-left-color: #2563eb;">
             <h4>案例 B：多層建築通訊死角</h4>
@@ -378,8 +315,6 @@ const ISO_CONTENT = [
         <p style="font-size: 1.1rem;">火熄了，你的任務才開始。找出「事實」而非「指責」。將失誤視為系統漏洞，進而優化 SOP。新竹縣消防的未來靠的是大家的專業，而不是運氣。</p>
         <p style="text-align: center; color: #b91c1c; font-weight: 900; margin-top: 2rem;">安全，是消防局最強的後盾。</p>
     </div>`,
-
-    // [23] Conclusion
     `<div class="page centered">
         <h2>結語：最後的叮嚀</h2>
         <p style="font-size: 1.25rem; line-height: 1.8;">
@@ -390,8 +325,6 @@ const ISO_CONTENT = [
         </div>
         <p style="text-align: center; font-weight: 700; margin-top: 4rem;">新竹縣政府消防局 職安科 敬製</p>
     </div>`,
-
-    // [24] Pocket Card
     `<div class="page" style="padding: 1.5rem;">
         <h2 style="font-size: 1.8rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; margin-bottom: 1.2rem; color: #b91c1c;">附錄：ISO 現場查核口袋卡</h2>
         <div style="font-size: 1.05rem; line-height: 1.4;">
@@ -422,17 +355,15 @@ const ISO_CONTENT = [
             </div>
         </div>
     </div>`,
-
-    // [25] Iron Flow
     `<div class="page centered">
         <h2 style="font-size: 2rem; color: #b91c1c;">6. 鐵皮工廠 ISO 現場決策心法卡</h2>
         <div class="mermaid" style="font-size: 1.6rem; padding: 1rem; background: #fff; border-radius: 8px;">
             graph TD
                 A[抵達鐵皮廠房火警] --> B[開始 360 度環繞觀測]
                 B --> C{觀察外牆與屋頂特徵}
-                C -->|鐵皮漆黑/暗紅<br/>屋頂桁架變形塌陷| D[倒塌極度危險]
-                C -->|濃煙噴射狀流出<br/>底層吸入強風| E[閃燃/爆燃前兆]
-                C -->|僅局部明火<br/>無明顯結構成損| F[持續監控<br/>水線挺進]
+                C -->|鐵皮漆黑/暗紅| D[倒塌極度危險]
+                C -->|濃煙噴射狀流出| E[閃燃/爆燃前兆]
+                C -->|僅局部明火| F[持續監控 水線挺進]
                 D --> G{ISO 的無情決斷}
                 E --> G
                 G --> H[執行: 強制全員退避]
@@ -442,79 +373,72 @@ const ISO_CONTENT = [
                 F --> L{作業滿 60 分鐘?}
                 L -->|是| M[提早準備第二梯重整]
                 L -->|否| N[定時 15min 氣壓與體力監控]
-                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff,font-size:26px;
-                classDef warning fill:#fc8,stroke:#f90,stroke-width:2px,color:#fff,font-size:26px;
-                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff,font-size:26px;
+                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff;
+                classDef warning fill:#fc8,stroke:#f90,stroke-width:2px,color:#fff;
+                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff;
                 class D,E,G,H,I,J,K danger;
                 class B,C,L,M warning;
                 class F,N safe;
         </div>
     </div>`,
-
-    // [26] Chem Flow
     `<div class="page centered">
         <h2 style="font-size: 2rem; color: #1e293b;">7. 化學工廠 ISO 現場決策心法卡</h2>
         <div class="mermaid" style="font-size: 1.6rem; padding: 1rem; background: #fff; border-radius: 8px;">
             graph TD
                 A[抵達化學/不明場所火警] --> B{第一動作: 取得 SDS?}
-                B -->|未取得 / 標示不清| C[執行法 21-2: 資訊權]
+                B -->|未取得| C[執行法 21-2: 資訊權]
                 C --> D[ISO 建議 IC: 暫停入室搜索]
-                D --> E[人員退避上風處, 外部防禦]
-                B -->|已取得 SDS<br/>明確危害特性| F[執行法 21-2: 退避權/防護]
+                D --> E[人員退避上風處 外部防禦]
+                B -->|已取得 SDS| F[執行法 21-2: 退避權/防護]
                 F --> G{洗消區 Decon 狀態?}
                 G -->|未架設完成| H[禁止人員進入熱區作戰]
                 G -->|已架設完成| I[確認人員 PPE 防護等級]
                 I --> J{防護等級符合危害?}
                 J -->|否| K[下令撤換裝備或停止作業]
-                J -->|是| L[進入熱區, 嚴格計時管理]
+                J -->|是| L[進入熱區 嚴格計時管理]
                 L --> M{洩漏擴散/風向改變?}
                 M -->|是| N[重新劃定冷/暖/熱特區]
                 M -->|否| O[持續監測洩漏源與人員體能]
-                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff,font-size:26px;
-                classDef chemical fill:#d4f,stroke:#90c,stroke-width:2px,color:#fff,font-size:26px;
-                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff,font-size:26px;
+                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff;
+                classDef chemical fill:#d4f,stroke:#90c,stroke-width:2px,color:#fff;
+                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff;
                 class C,D,E,H,K,N danger;
                 class B,F,G,I,J,M chemical;
                 class L,O safe;
         </div>
     </div>`,
-
-    // [27] Mayday Flow
     `<div class="page centered">
         <h2 style="font-size: 2rem; color: #b91c1c;">8. MAYDAY 生知救援決策心法卡</h2>
         <div class="mermaid" style="font-size: 0.95rem; padding: 1rem; background: #fff; border-radius: 8px;">
             graph TD
-                A[聽到 MAYDAY, MAYDAY, MAYDAY] --> B[全場頻道第一優先權]
+                A[聽到 MAYDAY] --> B[全場頻道第一優先權]
                 B --> C{取得 LUNAR 資訊?}
                 C -->|失敗/斷訊| D[立即派遣 RIT 循最後已知水線搜索]
-                C -->|成功| E[確認 L.U.N.A.R]
+                C -->|成功| E[確認 LUNAR]
                 E --> F[執行: 下令現場清點 PAR]
                 F --> G[啟動 RIT 緊急救援小組]
                 G --> H[建立獨立救援頻道]
                 H --> I{評估剩餘氣壓 A}
-                I -->|極低/用罄| J[要求 RIT 優先攜帶救援氣瓶 RIT Bag]
-                I -->|尚有餘裕| K[確認同仁受困類型 R 並整備破壞器材]
+                I -->|極低/用罄| J[要求 RIT 優先攜帶救援氣瓶]
+                I -->|尚有餘裕| K[確認同仁受困類型並整備器材]
                 J --> L[ISO 持續外部 TIC 監控火線變化]
                 K --> L
                 L --> M{火勢延燒/建築崩塌威脅救援?}
-                M -->|是| N[宣告長按三長聲氣笛<br/>啟動緊急逃生]
+                M -->|是| N[宣告長按三長聲氣笛 啟動緊急逃生]
                 M -->|否| O[全力掩護 RIT 救援行動]
-                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff,font-size:20px;
-                classDef action fill:#d4f,stroke:#90c,stroke-width:2px,color:#fff,font-size:20px;
-                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff,font-size:20px;
+                classDef danger fill:#f88,stroke:#f00,stroke-width:2px,color:#fff;
+                classDef action fill:#d4f,stroke:#90c,stroke-width:2px,color:#fff;
+                classDef safe fill:#afa,stroke:#3b3,stroke-width:2px,color:#fff;
                 class D,I,J,M,N danger;
                 class C,E,F,G,H,K action;
                 class A,B,L,O safe;
         </div>
     </div>`,
-
-    // [28] Appendix: Handover
     `<div class="page">
         <h2 style="font-size: 2.2rem; color: #1e293b; border-bottom: 4px solid var(--primary); padding-bottom: 0.5rem; margin-bottom: 2rem;">大隊 ISO 接管查核表</h2>
         <table style="font-size: 1.25rem; line-height: 1.8; border-collapse: collapse; width: 100%;">
             <tr style="background: #1e293b; color: #fff;">
-                <th style="padding: 1.2rem;">重點項目</th>
-                <th style="padding: 1.2rem;">查核內容 (一字不漏)</th>
+                <th style="padding: 1.2rem;">重點項目</th><th style="padding: 1.2rem;">查核內容 (一字不漏)</th>
             </tr>
             <tr>
                 <td style="padding: 1.2rem; font-weight: bold; background: #f1f5f9;">佈署狀況</td>
@@ -533,8 +457,6 @@ const ISO_CONTENT = [
             <p style="color: #64748b; font-size: 1.15rem; font-weight: bold;">(全文 723 行完備移植 ・ v1.1 旗艦版交付)</p>
         </div>
     </div>`,
-
-    // [29] Back Cover (Fix for odd-page spread flipping)
     `<div class="page cover" style="padding: 0; background: #020617; display: flex; align-items: center; justify-content: center;">
         <div style="text-align: center; color: #fff; padding: 2rem;">
             <div style="width: 80px; height: 8px; background: var(--primary); margin: 0 auto 2rem;"></div>
@@ -544,8 +466,12 @@ const ISO_CONTENT = [
     </div>`
 ];
 
+const TOTAL_PAGES = ISO_CONTENT.length;
+
 const ISO_APP = {
     flipBook: null,
+    isMobile: false,
+    isFlipping: false,
     selectors: {
         book: '#book',
         pageInfo: '#pageInfo',
@@ -558,13 +484,25 @@ const ISO_APP = {
     },
 
     init() {
+        this.isMobile = window.innerWidth <= 768;
         if (window.mermaid) {
             window.mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
         }
+        this.addSidebarOverlay();
         this.renderContent();
         this.initEngine();
         this.bindEvents();
         this.initMermaid();
+        this.updatePageInfo(0);
+    },
+
+    addSidebarOverlay() {
+        const container = document.querySelector(this.selectors.appContainer);
+        if (!container) return;
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        overlay.addEventListener('click', () => container.classList.remove('sidebar-open'));
+        container.appendChild(overlay);
     },
 
     renderContent() {
@@ -575,11 +513,19 @@ const ISO_APP = {
 
     initEngine() {
         const element = document.querySelector(this.selectors.book);
-        this.flipBook = new St.PageFlip(element, {
-            width: 650, height: 950, size: "stretch",
-            showCover: true, useMouseEvents: false, disableFlipByClick: true, flippingTime: 800
-        });
+        const vw = document.getElementById('book-container').clientWidth;
+        const vh = document.getElementById('book-container').clientHeight;
+        const config = this.isMobile
+            ? { width: vw, height: vh, size: "fixed", minWidth: 1200, showCover: true, useMouseEvents: true, disableFlipByClick: false, flippingTime: 400, maxShadowOpacity: 0.15, usePortrait: true, mobileScrollSupport: false }
+            : { width: 650, height: 950, size: "stretch", showCover: true, useMouseEvents: false, disableFlipByClick: true, flippingTime: 800 };
+
+        this.flipBook = new St.PageFlip(element, config);
         this.flipBook.loadFromHTML(document.querySelectorAll('.page'));
+    },
+
+    updatePageInfo(pageIndex) {
+        const pageInfo = document.querySelector(this.selectors.pageInfo);
+        if (pageInfo) pageInfo.textContent = `${pageIndex + 1} / ${TOTAL_PAGES}`;
     },
 
     initMermaid() {
@@ -590,24 +536,26 @@ const ISO_APP = {
                 const rect = el.getBoundingClientRect();
                 if (rect.width === 0 || rect.height === 0) return;
                 if (!el.id) el.id = 'mermaid-' + Date.now() + '-' + i;
-                window.mermaid.init(undefined, [el]);
+                try { window.mermaid.init(undefined, [el]); } catch(e) { /* skip */ }
                 el.setAttribute('data-processed', 'true');
             });
         }, 850);
     },
 
     bindEvents() {
-        const pageInfo = document.querySelector(this.selectors.pageInfo);
         const navItems = document.querySelectorAll(this.selectors.navItems);
 
         this.flipBook.on('flip', (e) => {
-            pageInfo.textContent = `${e.data + 1} / ${ISO_CONTENT.length}`;
+            this.updatePageInfo(e.data);
             navItems.forEach(nav => nav.classList.toggle('active', parseInt(nav.dataset.page) === e.data));
             this.initMermaid();
+            // Debounce flip lock
+            this.isFlipping = true;
+            setTimeout(() => { this.isFlipping = false; }, this.isMobile ? 450 : 850);
         });
 
-        // 【關鍵修正】：修正狀態檢查邏輯，確保翻頁動作不會重疊卡死
         const safeFlip = (dir) => {
+            if (this.isFlipping) return;
             if (this.flipBook.getState() !== 'read') return;
             dir === 'next' ? this.flipBook.flipNext() : this.flipBook.flipPrev();
         };
@@ -615,20 +563,31 @@ const ISO_APP = {
         const prevBtn = document.querySelector(this.selectors.prevBtn);
         const nextBtn = document.querySelector(this.selectors.nextBtn);
 
-        // 統一使用觸控與點擊雙重監控
-        const handlePrev = (e) => { e.preventDefault(); e.stopPropagation(); safeFlip('prev'); };
-        const handleNext = (e) => { e.preventDefault(); e.stopPropagation(); safeFlip('next'); };
-
-        prevBtn.addEventListener('touchstart', handlePrev, { passive: false });
-        prevBtn.addEventListener('click', handlePrev);
-        nextBtn.addEventListener('touchstart', handleNext, { passive: false });
-        nextBtn.addEventListener('click', handleNext);
+        // Unified touch+click: use flag to prevent double-fire from touch->click
+        let touchFired = false;
+        const addBtnEvents = (btn, dir) => {
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                touchFired = true;
+                safeFlip(dir);
+                setTimeout(() => { touchFired = false; }, 300);
+            }, { passive: false });
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!touchFired) safeFlip(dir);
+            });
+        };
+        addBtnEvents(prevBtn, 'prev');
+        addBtnEvents(nextBtn, 'next');
 
         navItems.forEach(nav => {
             nav.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.flipBook.flip(parseInt(nav.dataset.page));
-                if (window.innerWidth <= 768) {
+                const page = parseInt(nav.dataset.page);
+                if (isNaN(page)) return;
+                this.flipBook.flip(page);
+                if (this.isMobile) {
                     setTimeout(() => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open'), 350);
                 }
             });
@@ -636,26 +595,49 @@ const ISO_APP = {
 
         document.querySelector(this.selectors.menuToggle).onclick = () => document.querySelector(this.selectors.appContainer).classList.add('sidebar-open');
         document.querySelector(this.selectors.closeSidebar).onclick = () => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
-        
-        this.initGestureControl();
+
+        if (this.isMobile) this.initGestureControl();
+
+        // Handle orientation/resize changes
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const wasMobile = this.isMobile;
+                this.isMobile = window.innerWidth <= 768;
+                if (wasMobile !== this.isMobile) location.reload();
+            }, 300);
+        });
     },
 
     initGestureControl() {
         let startX = 0, startY = 0, isSwiping = false;
         const target = document.getElementById('book-container');
         document.body.style.overscrollBehaviorX = 'none';
-        target.style.touchAction = 'pan-y';
 
-        target.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, { passive: true });
+        target.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isSwiping = false;
+        }, { passive: true });
+
         target.addEventListener('touchmove', (e) => {
-            const dx = Math.abs(e.touches[0].clientX - startX), dy = Math.abs(e.touches[0].clientY - startY);
-            if (dx > dy && dx > 10) { isSwiping = true; if (e.cancelable) e.preventDefault(); }
+            const dx = Math.abs(e.touches[0].clientX - startX);
+            const dy = Math.abs(e.touches[0].clientY - startY);
+            if (dx > dy && dx > 15) {
+                isSwiping = true;
+                if (e.cancelable) e.preventDefault();
+            }
         }, { passive: false });
+
         target.addEventListener('touchend', (e) => {
-            // UI 避讓：如果在按鈕上則不執行手勢
-            if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle')) return;
+            if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle, .sidebar-overlay')) return;
+            if (!isSwiping) return;
             const dx = e.changedTouches[0].clientX - startX;
-            if (isSwiping && Math.abs(dx) > 40) dx > 0 ? this.flipBook.flipPrev() : this.flipBook.flipNext();
+            if (Math.abs(dx) > 50) {
+                if (this.isFlipping) return;
+                dx > 0 ? this.flipBook.flipPrev() : this.flipBook.flipNext();
+            }
             isSwiping = false;
         }, { passive: true });
     }

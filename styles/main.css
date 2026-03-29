@@ -1,7 +1,8 @@
-/* --- 3D Flip-book Layout Optimized v4 --- */
+/* --- 3D Flip-book Layout Optimized v5 (Mobile-First Overhaul) --- */
 :root {
     --primary: #ff0000;
     --primary-hover: #cc0000;
+    --primary-rgb: 255, 0, 0;
     --bg-dark: #0f172a;
     --sidebar-bg: #1e293b;
     --text-main: #f8fafc;
@@ -16,30 +17,44 @@
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
 }
 
+html {
+    overflow: hidden;
+    height: 100%;
+    height: -webkit-fill-available;
+}
+
 body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     overflow: hidden;
     height: 100vh;
+    height: -webkit-fill-available; /* iOS Safari safe area */
     position: relative;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Mobile Menu Toggle */
 .menu-toggle {
     display: none;
     position: fixed;
-    top: 15px;
-    left: 15px;
+    top: 12px;
+    left: 12px;
     z-index: 200;
-    width: 45px;
-    height: 45px;
+    width: 42px;
+    height: 42px;
     background: var(--primary);
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.menu-toggle:active {
+    transform: scale(0.92);
 }
 
 .close-sidebar {
@@ -49,17 +64,20 @@ body {
     color: var(--text-dim);
     font-size: 1.2rem;
     cursor: pointer;
+    padding: 4px;
 }
 
 /* App Layout */
 .app-container {
     display: flex;
     height: 100vh;
+    height: -webkit-fill-available;
 }
 
 /* Sidebar Styling */
 .sidebar {
     width: 300px;
+    min-width: 300px;
     background: var(--sidebar-bg);
     border-right: 1px solid #334155;
     padding: 2rem 1.5rem;
@@ -67,6 +85,7 @@ body {
     flex-direction: column;
     box-shadow: 4px 0 15px rgba(0,0,0,0.3);
     z-index: 100;
+    overflow: hidden;
 }
 
 .sidebar-header {
@@ -79,13 +98,29 @@ body {
     list-style: none;
     overflow-y: auto;
     flex-grow: 1;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #475569 transparent;
+}
+
+.nav-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.nav-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nav-list::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
 }
 
 .nav-section {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #ef4444; /* Vivid Red Stages */
+    color: #ef4444;
     font-weight: 900;
     margin: 1.5rem 0 0.8rem 0;
 }
@@ -111,50 +146,51 @@ body {
     font-weight: 600;
 }
 
-/* Main Content Area - 1.5x HERO ALIGNMENT */
+/* Main Content Area */
 .main-content {
     flex-grow: 1;
     height: 100vh;
+    height: -webkit-fill-available;
     position: relative;
     display: flex;
-    align-items: flex-start; /* Forced start to protect headers */
+    align-items: center;
     justify-content: center;
     background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-    padding: 60px 2rem 4rem 2rem; /* Strategic 60px top push */
-    overflow-y: auto; /* Enable scroll for Hero height */
+    padding: 2rem 5rem;
+    overflow: hidden;
 }
 
-/* Book Container - 1.5x LARGE SCALE */
+/* Book Container */
 #book-container {
     width: 100%;
-    min-height: 950px; /* 1.5x baseline */
+    height: 100%;
+    max-height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
     perspective: 2000px;
     filter: drop-shadow(0 25px 50px rgba(0,0,0,0.5));
-    touch-action: none; /* 防止手機瀏覽器預設滑動手勢干擾 JS 翻頁 */
+    touch-action: none;
 }
 
 .flip-book {
     box-shadow: 0 0 50px rgba(0,0,0,0.5);
-    /* Dimensions will be controlled by JS initialized StPageFlip */
 }
 
-/* --- Page Layout & Typography (Optimized V15.0) --- */
+/* --- Page Layout & Typography --- */
 .page {
-    padding: 3rem 4rem; /* Balanced horizontal/vertical padding */
+    padding: 3rem 4rem;
     background-color: #ffffff;
     color: #1a1a1a;
-    box-shadow: inset 0 0 100px rgba(0,0,0,0.05); /* Subtle depth */
-    font-size: 1.15rem; /* Larger base font for field-grade readability */
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.05);
+    font-size: 1.15rem;
     line-height: 1.7;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    display: block;
+    width: 100%;
+    height: 100%;
     border: 1px solid #e5e7eb;
 }
 
@@ -200,7 +236,7 @@ li { margin-bottom: 0.8rem; }
     margin: 2rem 0;
 }
 
-/* --- Table Styling (Tactical Grade) --- */
+/* --- Table Styling --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -218,12 +254,7 @@ th, td {
 th {
     background: #1e293b;
     color: #fff;
-    border-top: 1px solid #e2e8f0;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 2.5rem 1.5rem;
-    font-style: italic;
-    color: #64748b;
-    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 /* Navigation Buttons */
@@ -231,20 +262,20 @@ th {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 65px;
-    height: 65px;
+    width: 55px;
+    height: 55px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999 !important; /* 【關鍵】：加到最大並強制覆蓋 */
+    z-index: 50;
 }
 
 .nav-btn:hover {
@@ -253,24 +284,30 @@ th {
     transform: translateY(-50%) scale(1.15);
 }
 
-#prevBtn { left: 3%; }
-#nextBtn { right: 3%; }
+.nav-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+#prevBtn { left: 8px; }
+#nextBtn { right: 8px; }
 
 /* Bottom Bar */
 .bottom-bar {
     position: absolute;
-    bottom: 2rem;
+    bottom: 1.5rem;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0,0,0,0.6);
     backdrop-filter: blur(15px);
-    padding: 1rem 2.5rem;
+    padding: 0.8rem 2rem;
     border-radius: 40px;
     color: white;
-    font-size: 1rem;
+    font-size: 0.9rem;
     letter-spacing: 0.1em;
     font-weight: 600;
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 40;
+    pointer-events: none;
 }
 
 /* Global Image Constraint */
@@ -279,92 +316,209 @@ th {
     max-height: 450px;
     display: block;
     margin: 1.2rem auto;
-    object-fit: contain; /* Changed to contain for better tactical viewing */
+    object-fit: contain;
     border-radius: 8px;
 }
 
-/* Mermaid Adjustments */
-/* --- Responsive Design (Mobile First/Optimized) --- */
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 250;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.app-container.sidebar-open .sidebar-overlay {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================================
+   MOBILE SINGLE-PAGE MODE (≤ 768px)
+   ============================================================ */
 @media screen and (max-width: 768px) {
+    /* === Layout === */
     .menu-toggle {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Hidden when sidebar is open so it doesn't overlap */
+    .app-container.sidebar-open .menu-toggle {
+        opacity: 0;
+        pointer-events: none;
     }
 
     .sidebar {
         position: fixed;
-        left: -300px;
+        left: 0;
         top: 0;
         bottom: 0;
-        width: 300px;
+        width: 280px;
+        min-width: 280px;
+        transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 300;
+        padding: 1.5rem 1rem;
     }
 
     .app-container.sidebar-open .sidebar {
-        transform: translateX(300px);
+        transform: translateX(0);
     }
 
     .close-sidebar {
         display: block;
     }
 
+    /* === Main Content - key mobile fix === */
     .main-content {
-        padding: 80px 10px 80px 10px;
+        padding: 60px 0 60px 0; /* Top for menu btn, bottom for bar */
+        width: 100vw;
     }
 
+    /* === Book Container - SINGLE PAGE === */
     #book-container {
-        min-height: auto;
-        height: 70vh;
+        width: 100%;
+        height: calc(100vh - 120px);
+        height: calc(100dvh - 120px); /* dynamic viewport for mobile browsers */
+        max-height: none;
     }
 
-    /* Page scaling for mobile */
+    .flip-book {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* === Page Styling for Mobile === */
     .page {
-        padding: 1.5rem 1rem !important;
+        padding: 1.2rem 1rem !important;
+        font-size: 0.95rem !important;
+        line-height: 1.65 !important;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Cover page special handling */
+    .page.cover {
+        padding: 0 !important;
+    }
+
+    h2 { font-size: 1.4rem !important; padding-bottom: 0.4rem !important; }
+    h3 { font-size: 1.2rem !important; }
+    h4 { font-size: 1.1rem !important; }
+
+    .card {
+        padding: 1rem !important;
         font-size: 1rem !important;
+        margin: 1rem 0 !important;
     }
 
-    h2 { font-size: 1.5rem !important; }
-    h3 { font-size: 1.3rem !important; }
-    h4 { font-size: 1.15rem !important; }
+    .quote-box {
+        padding: 1rem !important;
+        margin: 1rem 0 !important;
+    }
 
+    /* === Navigation Buttons (mobile-optimized) === */
     .nav-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 1rem;
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+        background: rgba(var(--primary-rgb), 0.7);
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
-    #prevBtn { 
-        left: 2px; 
-        background: rgba(var(--primary-rgb), 0.3); /* 手機版導航點更為顯眼 */
+    .nav-btn:active {
+        transform: translateY(-50%) scale(0.85);
+        background: var(--primary);
     }
-    #nextBtn { right: 2px; }
 
+    #prevBtn {
+        left: 4px;
+    }
+    #nextBtn {
+        right: 4px;
+    }
+
+    /* === Bottom Bar === */
     .bottom-bar {
-        padding: 0.6rem 1.5rem;
-        font-size: 0.85rem;
-        bottom: 1rem;
+        padding: 0.5rem 1.5rem;
+        font-size: 0.8rem;
+        bottom: 8px;
     }
 
-    /* Table adjustments */
+    /* === Table adjustments === */
     table {
-        font-size: 0.85rem !important;
+        font-size: 0.82rem !important;
     }
     th, td {
-        padding: 0.6rem !important;
+        padding: 0.5rem !important;
     }
 
-    /* Mermaid adjustment (手機版修正) */
+    /* === Mermaid mobile === */
     .mermaid {
         padding: 0.5rem;
         width: 100%;
         display: flex;
         justify-content: center;
-        overflow-x: auto; /* 如果圖太大，允許左右滑動看圖 */
-        min-height: 250px;
+        overflow-x: auto;
+        min-height: 200px;
+        -webkit-overflow-scrolling: touch;
     }
-    
+
     .mermaid svg {
-        max-width: 100%; /* 確保 SVG 不會撐破手機螢幕 */
+        max-width: 100%;
         height: auto !important;
+    }
+
+    /* === Image scaling === */
+    .page img {
+        max-height: 250px;
+    }
+}
+
+/* Small phones (≤ 380px) */
+@media screen and (max-width: 380px) {
+    .page {
+        padding: 1rem 0.8rem !important;
+        font-size: 0.88rem !important;
+    }
+
+    h2 { font-size: 1.25rem !important; }
+    h3 { font-size: 1.1rem !important; }
+    h4 { font-size: 1rem !important; }
+
+    table {
+        font-size: 0.75rem !important;
+    }
+    th, td {
+        padding: 0.4rem !important;
+    }
+}
+
+/* Landscape mobile */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    .main-content {
+        padding: 50px 0 50px 0;
+    }
+
+    #book-container {
+        height: calc(100vh - 100px);
+        height: calc(100dvh - 100px);
+    }
+}
+
+/* Tablet (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .main-content {
+        padding: 2rem 3rem;
+    }
+
+    .sidebar {
+        width: 250px;
+        min-width: 250px;
     }
 }
