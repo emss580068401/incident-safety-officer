@@ -700,46 +700,51 @@ const ISO_APP = {
             this.initMermaid();
         });
 
-        // [2] Navigation Buttons (終極修正：確保按鈕靈敏且不衝突)
+        // [2] Navigation Buttons (修正：解決按鈕與 3D 引擎指令衝突)
         const nextBtn = document.querySelector(this.selectors.nextBtn);
         const prevBtn = document.querySelector(this.selectors.prevBtn);
 
-        const handleBtnAction = (direction, e) => {
-            if (e.cancelable) e.preventDefault();
-            e.stopPropagation();
+        const safeFlip = (direction) => {
+            // 防止動畫重疊導致卡死
+            if (this.flipBook.getSetting().flippingTime > 800 && this.flipBook.getState() !== 'read') return;
+            
             if (direction === 'next') this.flipBook.flipNext();
             else this.flipBook.flipPrev();
         };
 
         if (prevBtn) {
-            prevBtn.addEventListener('touchstart', (e) => handleBtnAction('prev', e), { passive: false });
-            prevBtn.addEventListener('click', (e) => handleBtnAction('prev', e));
+            // 在手機端僅使用觸控啟動，並徹底阻斷後續冒泡
+            prevBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault(); e.stopPropagation(); safeFlip('prev');
+            }, { passive: false });
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault(); e.stopPropagation(); safeFlip('prev');
+            });
         }
         if (nextBtn) {
-            nextBtn.addEventListener('touchstart', (e) => handleBtnAction('next', e), { passive: false });
-            nextBtn.addEventListener('click', (e) => handleBtnAction('next', e));
+            nextBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault(); e.stopPropagation(); safeFlip('next');
+            }, { passive: false });
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault(); e.stopPropagation(); safeFlip('next');
+            });
         }
 
-        // [3] Sidebar Navigation Items (終極修正：解決目錄往前跳轉失敗與選單捲動問題)
+        // [3] Sidebar Navigation Items (修正：解決「往前跳轉」失敗的問題)
         navItems.forEach(nav => {
-            // 【重要】：目錄項只用 click，移除 touchstart 以利目錄上下捲動不誤觸
             nav.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
 
                 const pageNum = parseInt(nav.getAttribute('data-page'));
-                const currentPage = this.flipBook.getCurrentPageIndex();
+                
+                // 強制下達跳轉指令，不論前後
+                this.flipBook.flip(pageNum);
 
-                // 只有當目標頁碼不同時才執行跳轉，防止重複點擊
-                if (pageNum !== currentPage) {
-                    this.flipBook.flip(pageNum);
-                }
-
-                // 針對手機版：給予足夠延遲再關閉側邊欄，確保 3D 引擎在佈局改變前完成計算
                 if (window.innerWidth <= 768) {
                     setTimeout(() => {
                         document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
-                    }, 350); // 稍微拉長延遲，確保「往前翻」動畫順利啟動
+                    }, 300);
                 }
             });
         });
@@ -823,6 +828,12 @@ const ISO_APP = {
         const handleEnd = (x, y) => {
             if (!startX || !startY) return;
 
+            // 【關鍵修正】：如果點擊的起點是在按鈕或側邊欄上，手勢程式碼直接「放手」，交給 UI 處理
+            if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle')) {
+                startX = 0; startY = 0;
+                return;
+            }
+
             const deltaX = x - startX;
             const deltaY = y - startY;
             const absDeltaX = Math.abs(deltaX);
@@ -830,32 +841,23 @@ const ISO_APP = {
             const deltaTime = Date.now() - startTime;
             const screenWidth = window.innerWidth;
 
-            // 垂直捲動防呆 (避免看長文時不小心翻頁)
+            // 垂直捲動防呆
             if (absDeltaY > absDeltaX && absDeltaY > 15) {
                 startX = 0; startY = 0;
                 return;
             }
 
-            // 【關鍵 2】：移除所有邊緣限制！只要手勢在 800ms 內完成就判定翻頁
             if (deltaTime < 800) {
-                // 情境 1: 明確的水平滑動 (Swipe)
                 if (absDeltaX > 30) {
-                    if (deltaX > 0) {
-                        this.flipBook.flipPrev(); // 往右滑 -> 翻前一頁
-                    } else {
-                        this.flipBook.flipNext(); // 往左滑 -> 翻下一頁
-                    }
+                    if (deltaX > 0) this.flipBook.flipPrev();
+                    else this.flipBook.flipNext();
                 } 
-                // 情境 2: 單純點擊兩側 30% (Tap - 無滑動)
                 else if (absDeltaX < 10 && !isSwiping) {
-                    if (x < screenWidth * 0.3) {
-                        this.flipBook.flipPrev(); // 點擊左邊 30% -> 翻前一頁
-                    } else if (x > screenWidth * 0.7) {
-                        this.flipBook.flipNext(); // 點擊右邊 30% -> 翻下一頁
-                    }
+                    // 【關鍵修正】：縮小點擊翻頁判定，避免誤觸
+                    if (x < screenWidth * 0.2) this.flipBook.flipPrev();
+                    else if (x > screenWidth * 0.8) this.flipBook.flipNext();
                 }
             }
-
             startX = 0; startY = 0;
         };
 
