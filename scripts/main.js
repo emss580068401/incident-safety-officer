@@ -625,36 +625,45 @@ const ISO_APP = {
     },
 
     /**
-     * Initialize Mermaid diagrams (手機絕對顯示版)
-     * 棄用容易在手機誤判的 clientWidth，改用套件原生的可見頁面標籤
+     * Initialize Mermaid diagrams (雙平台通吃完美版)
+     * 支援手機(單頁)與電腦(雙頁)模式，精準判斷元素可見性
      */
     initMermaid() {
         if (!window.mermaid) return;
 
-        // 關鍵修正 1：只針對有掛上「當前顯示 (stf__page--active)」的頁面找尋流程圖
-        const activePages = document.querySelectorAll('.stf__page--active .mermaid');
-        if (activePages.length === 0) return;
+        // 抓取全書所有的流程圖
+        const targets = document.querySelectorAll('.mermaid');
+        if (targets.length === 0) return;
 
-        // 延遲 850ms，確保翻頁動畫徹底結束
+        // 延遲 850ms，確保翻頁動畫徹底結束、頁面展開定位
         setTimeout(() => {
-            activePages.forEach((el, index) => {
-                // 關鍵修正 2：不再檢查 clientWidth，只要是 active 頁面就強制渲染
+            targets.forEach((el, index) => {
                 
+                // 【關鍵修正】：放棄使用特定 class，改用 offsetParent 判斷！
+                // 只要 offsetParent 不為 null，就代表該頁面目前出現在畫面上 (沒有被 display: none 隱藏)
+                // 這個判定法可以完美通吃電腦的「雙頁模式」與手機的「單頁模式」
+                if (!el.offsetParent) return; 
+
+                // 如果先前標記過 data-processed，清除標記並還原原始碼以利重新渲染
                 if (el.getAttribute('data-processed') === 'true') {
                     el.removeAttribute('data-processed');
                     const backup = el.getAttribute('data-original-content');
                     if (backup) el.innerHTML = backup;
                 }
 
+                // 備份原始內容以利後續翻回時還原 (第一次運行時執行)
                 if (!el.getAttribute('data-original-content')) {
                     el.setAttribute('data-original-content', el.innerHTML);
                 }
 
-                // 強制給予獨立 ID 避免衝突
+                // 強制給予獨立 ID 避免 Mermaid 繪圖衝突
                 if (!el.id) el.id = 'mermaid-chart-' + Date.now() + '-' + index;
 
+                // 執行渲染
                 try {
                     window.mermaid.init(undefined, [el]);
+                    // 標記完成，避免同個畫面重複浪費效能
+                    el.setAttribute('data-processed', 'true');
                 } catch (error) {
                     console.error("Mermaid 渲染失敗:", error);
                 }
