@@ -575,11 +575,28 @@ const ISO_APP = {
      * Application Entry Point
      */
     init() {
+        // [1] Initialize Mermaid with global settings
+        if (window.mermaid) {
+            window.mermaid.initialize({
+                startOnLoad: false,
+                theme: 'dark',
+                securityLevel: 'loose',
+                themeVariables: {
+                    primaryTextColor: '#ffffff',
+                    secondaryTextColor: '#ffffff',
+                    tertiaryTextColor: '#ffffff',
+                    nodeTextColor: '#ffffff',
+                    mainBkg: '#1e293b',
+                    nodeBorder: '#cbd5e1'
+                }
+            });
+        }
+
         this.renderContent();
         this.initEngine();
         this.bindEvents();
 
-        // 初次加載渲染所有可見頁面
+        // 初始頁面渲染
         this.initMermaid();
 
         console.log("ISO Manual App Initialized Successfully.");
@@ -625,36 +642,26 @@ const ISO_APP = {
     },
 
     /**
-     * Initialize Mermaid diagrams (雙平台通吃完美版)
-     * 支援手機(單頁)與電腦(雙頁)模式，精準判斷元素可見性
+     * Initialize Mermaid diagrams (效能與相容性終極版)
+     * 解決網頁版與本機版差異，採用精確渲染且「只畫一次永久保留」的最佳化策略
      */
     initMermaid() {
         if (!window.mermaid) return;
 
-        // 抓取全書所有的流程圖
-        const targets = document.querySelectorAll('.mermaid');
+        // 關鍵 1：只抓取「尚未被成功繪製」的流程圖。畫過一次的就放過它，節省效能！
+        const targets = document.querySelectorAll('.mermaid:not([data-processed="true"])');
         if (targets.length === 0) return;
 
-        // 延遲 850ms，確保翻頁動畫徹底結束、頁面展開定位
+        // 延遲 850ms，確保翻頁動畫徹底結束、頁面在畫面中完全展開定位
         setTimeout(() => {
             targets.forEach((el, index) => {
                 
-                // 【關鍵修正】：放棄使用特定 class，改用 offsetParent 判斷！
-                // 只要 offsetParent 不為 null，就代表該頁面目前出現在畫面上 (沒有被 display: none 隱藏)
-                // 這個判定法可以完美通吃電腦的「雙頁模式」與手機的「單頁模式」
-                if (!el.offsetParent) return; 
-
-                // 如果先前標記過 data-processed，清除標記並還原原始碼以利重新渲染
-                if (el.getAttribute('data-processed') === 'true') {
-                    el.removeAttribute('data-processed');
-                    const backup = el.getAttribute('data-original-content');
-                    if (backup) el.innerHTML = backup;
-                }
-
-                // 備份原始內容以利後續翻回時還原 (第一次運行時執行)
-                if (!el.getAttribute('data-original-content')) {
-                    el.setAttribute('data-original-content', el.innerHTML);
-                }
+                // 關鍵 2：改用 getBoundingClientRect 取得「真實物理尺寸」
+                // 這比 offsetParent 更準確，能完美避開 LINE/FB 等內建瀏覽器的奇怪限制
+                const rect = el.getBoundingClientRect();
+                
+                // 如果寬度或高度是 0，代表這一頁目前還被隱藏著，跳過不處理
+                if (rect.width === 0 || rect.height === 0) return; 
 
                 // 強制給予獨立 ID 避免 Mermaid 繪圖衝突
                 if (!el.id) el.id = 'mermaid-chart-' + Date.now() + '-' + index;
@@ -662,7 +669,7 @@ const ISO_APP = {
                 // 執行渲染
                 try {
                     window.mermaid.init(undefined, [el]);
-                    // 標記完成，避免同個畫面重複浪費效能
+                    // 關鍵 3：標記為已處理。未來不論怎麼翻頁，SVG 都不會消失，也不會浪費效能重畫
                     el.setAttribute('data-processed', 'true');
                 } catch (error) {
                     console.error("Mermaid 渲染失敗:", error);
