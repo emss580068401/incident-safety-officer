@@ -3,13 +3,13 @@
 const ISO_CONTENT = [
     `<div class="page cover" style="padding: 0; background: #020617;">
         <div style="height: 100%; width: 100%; position: relative; overflow: hidden;">
-            <img src="assets/cover.jpg" style="width: 100%; height: 65%; object-fit: cover;">
+            <img src="assets/cover.png" style="width: 100%; height: 65%; object-fit: cover;">
             <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
                         background: linear-gradient(transparent, #020617 80%); padding: 2rem 3.5rem;
                         display: flex; flex-direction: column; justify-content: flex-end;">
-                <h1 style="font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.1; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 0.5rem;">事故安全官<br>實戰指引 v1.1</h1>
+                <h1 style="font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.1; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 0.5rem;">事故安全官<br>實戰指引</h1>
                 <div style="border-top: 4px solid var(--primary); margin-top: 0.8rem; padding-top: 0.8rem;">
-                    <p style="font-size: clamp(0.9rem, 2vw, 1.2rem); font-weight: 700; color: #fff; margin-bottom: 0;">新竹縣政府消防局 職安科</p>
+                    <p style="font-size: clamp(0.9rem, 2vw, 1.2rem); font-weight: 700; color: #fff; margin-bottom: 0;">新竹縣政府消防局 職安科 數位教材</p>
                 </div>
             </div>
         </div>
@@ -536,7 +536,7 @@ const ISO_APP = {
                 const rect = el.getBoundingClientRect();
                 if (rect.width === 0 || rect.height === 0) return;
                 if (!el.id) el.id = 'mermaid-' + Date.now() + '-' + i;
-                try { window.mermaid.init(undefined, [el]); } catch(e) { /* skip */ }
+                try { window.mermaid.init(undefined, [el]); } catch (e) { /* skip */ }
                 el.setAttribute('data-processed', 'true');
             });
         }, 850);
@@ -640,7 +640,7 @@ const ISO_APP = {
             if (e.touches.length > 1) return; // Allow pinch to zoom
             const vw = window.innerWidth;
             // Native free scroll in the middle 60% zone without intercepting horizontal blocks
-            if (startX > vw * 0.2 && startX < vw * 0.8) return; 
+            if (startX > vw * 0.2 && startX < vw * 0.8) return;
 
             const dx = Math.abs(e.touches[0].clientX - startX);
             const dy = Math.abs(e.touches[0].clientY - startY);
@@ -653,7 +653,7 @@ const ISO_APP = {
         target.addEventListener('touchend', (e) => {
             if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle, .sidebar-overlay')) return;
             if (!isSwiping) return;
-            
+
             const vw = window.innerWidth;
             if (startX > vw * 0.2 && startX < vw * 0.8) return; // Do not custom-flip if touch started in middle zone
 
