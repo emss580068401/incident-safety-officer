@@ -472,12 +472,15 @@ const ISO_APP = {
     flipBook: null,
     isMobile: false,
     isFlipping: false,
+    audioCtx: null,
+    audioUnlocked: false,
     selectors: {
         book: '#book',
         pageInfo: '#pageInfo',
         navItems: '.nav-item',
         prevBtn: '#prevBtn',
         nextBtn: '#nextBtn',
+        progressFill: '#progress-fill',
         menuToggle: '#menuToggle',
         closeSidebar: '#closeSidebar',
         appContainer: '.app-container'
@@ -485,6 +488,8 @@ const ISO_APP = {
 
     init() {
         this.isMobile = window.innerWidth <= 768;
+        this.initAudioContext();
+        this.initLightbox();
         if (window.mermaid) {
             window.mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
         }
@@ -515,9 +520,29 @@ const ISO_APP = {
         const element = document.querySelector(this.selectors.book);
         const vw = document.getElementById('book-container').clientWidth;
         const vh = document.getElementById('book-container').clientHeight;
+        
         const config = this.isMobile
-            ? { width: vw, height: vh, size: "fixed", minWidth: 1200, showCover: true, useMouseEvents: true, disableFlipByClick: false, flippingTime: 400, maxShadowOpacity: 0.15, usePortrait: true, mobileScrollSupport: true }
-            : { width: 650, height: 950, size: "stretch", showCover: true, useMouseEvents: false, disableFlipByClick: true, flippingTime: 800 };
+            ? { 
+                width: vw, 
+                height: vh, 
+                size: "fixed", 
+                showCover: false, 
+                useMouseEvents: false, 
+                disableFlipByClick: true, 
+                flippingTime: 400, 
+                maxShadowOpacity: 0.15, 
+                usePortrait: true, 
+                mobileScrollSupport: false 
+              }
+            : { 
+                width: 650, 
+                height: 950, 
+                size: "stretch", 
+                showCover: true, 
+                useMouseEvents: false, 
+                disableFlipByClick: true, 
+                flippingTime: 800 
+              };
 
         this.flipBook = new St.PageFlip(element, config);
         this.flipBook.loadFromHTML(document.querySelectorAll('.page'));
@@ -526,6 +551,12 @@ const ISO_APP = {
     updatePageInfo(pageIndex) {
         const pageInfo = document.querySelector(this.selectors.pageInfo);
         if (pageInfo) pageInfo.textContent = `${pageIndex + 1} / ${TOTAL_PAGES}`;
+        
+        const progressFill = document.querySelector(this.selectors.progressFill);
+        if (progressFill) {
+            const pct = ((pageIndex + 1) / TOTAL_PAGES) * 100;
+            progressFill.style.width = pct + '%';
+        }
     },
 
     initMermaid() {
@@ -542,6 +573,124 @@ const ISO_APP = {
         }, 850);
     },
 
+    initAudioContext() {
+        const unlock = (e) => {
+            if (this.audioUnlocked) return;
+            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+            
+            const buffer = this.audioCtx.createBuffer(1, 1, 22050);
+            const source = this.audioCtx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(this.audioCtx.destination);
+            source.start(0);
+
+            this.audioUnlocked = true;
+            if (e.target.closest('#nextBtn, #prevBtn, .nav-item')) {
+                this.playSynth('click');
+            }
+            document.removeEventListener('touchstart', unlock, true);
+            document.removeEventListener('mousedown', unlock, true);
+        };
+        document.addEventListener('touchstart', unlock, true);
+        document.addEventListener('mousedown', unlock, true);
+    },
+
+    playSynth(type) {
+        if (!this.audioUnlocked || !this.audioCtx) return;
+        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+        const now = this.audioCtx.currentTime;
+
+        if (type === 'click') {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        } else if (type === 'flip') {
+            const bufferSize = this.audioCtx.sampleRate * 0.3;
+            const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            const noise = this.audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            const filter = this.audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(3000, now);
+            filter.frequency.exponentialRampToValueAtTime(500, now + 0.3);
+            const gain = this.audioCtx.createGain();
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            noise.start(now);
+            noise.stop(now + 0.3);
+        }
+    },
+
+    initLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        const content = document.getElementById('lightbox-content');
+        const caption = document.getElementById('lightbox-caption');
+        const closeBtn = document.querySelector('.lightbox-close');
+        if (!lightbox) return;
+
+        const closeLightbox = () => {
+            lightbox.style.display = 'none';
+            content.innerHTML = '';
+            caption.innerHTML = '';
+        };
+
+        closeBtn.onclick = closeLightbox;
+        lightbox.onclick = (e) => { if (e.target === lightbox) closeLightbox(); };
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+        document.addEventListener('click', (e) => {
+            const img = e.target.closest('.page img');
+            if (img && !img.closest('.lightbox-content')) {
+                lightbox.style.display = 'flex';
+                const clone = img.cloneNode();
+                content.innerHTML = '';
+                content.appendChild(clone);
+                caption.textContent = img.alt || '手冊圖片預覽';
+                this.playSynth('click');
+            }
+            const mermaidChart = e.target.closest('.mermaid');
+            if (mermaidChart && !mermaidChart.closest('.lightbox-content')) {
+                lightbox.style.display = 'flex';
+                const svg = mermaidChart.querySelector('svg');
+                if (svg) {
+                    const clone = svg.cloneNode(true);
+                    clone.classList.add('mermaid-clone');
+                    content.innerHTML = '';
+                    content.appendChild(clone);
+                    caption.textContent = '決策流程圖預覽';
+                    this.playSynth('click');
+                }
+            }
+        });
+        this.updateZoomIcons();
+    },
+
+    updateZoomIcons() {
+        document.querySelectorAll('.page img:not(.zoomed)').forEach(img => {
+            if (img.closest('.lightbox-content')) return;
+            img.classList.add('zoomed');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'img-container';
+            img.parentNode.insertBefore(wrapper, img);
+            wrapper.appendChild(img);
+            wrapper.insertAdjacentHTML('beforeend', '<div class="zoom-icon"><i class="fas fa-search-plus"></i></div>');
+        });
+    },
+
     bindEvents() {
         const navItems = document.querySelectorAll(this.selectors.navItems);
 
@@ -549,59 +698,59 @@ const ISO_APP = {
             this.updatePageInfo(e.data);
             navItems.forEach(nav => nav.classList.toggle('active', parseInt(nav.dataset.page) === e.data));
             this.initMermaid();
-            // Debounce flip lock
+            this.updateZoomIcons();
+            this.playSynth('flip');
             this.isFlipping = true;
             setTimeout(() => { this.isFlipping = false; }, this.isMobile ? 450 : 850);
         });
 
         const safeFlip = (dir) => {
             if (this.isFlipping) return;
-            if (this.flipBook.getState() !== 'read') return;
-            dir === 'next' ? this.flipBook.flipNext() : this.flipBook.flipPrev();
-        };
+            this.playSynth('click');
+            const currentState = this.flipBook.getState();
+            if (currentState === 'flipping' || currentState === 'user_fold') return;
 
-        const prevBtn = document.querySelector(this.selectors.prevBtn);
-        const nextBtn = document.querySelector(this.selectors.nextBtn);
-
-        // Unified touch+click: use flag to prevent double-fire from touch->click
-        let touchFired = false;
-        const addBtnEvents = (btn, dir) => {
-            btn.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
-            btn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                touchFired = true;
-                safeFlip(dir);
-                setTimeout(() => { touchFired = false; }, 300);
-            }, { passive: false });
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (!touchFired) safeFlip(dir);
-            });
-        };
-        addBtnEvents(prevBtn, 'prev');
-        addBtnEvents(nextBtn, 'next');
-
-        // Block StPageFlip drag in the middle 60% on mobile so users can scroll perfectly
-        const blockMiddleDrag = (e) => {
-            if (!this.isMobile) return;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const vw = window.innerWidth;
-            if (clientX > vw * 0.2 && clientX < vw * 0.8) {
-                e.stopPropagation();
+            const currentPage = this.flipBook.getCurrentPageIndex();
+            if (this.isMobile) {
+                if (dir === 'prev' && currentPage > 0) {
+                    this.isFlipping = true;
+                    this.flipBook.turnToPrevPage();
+                    this.updatePageInfo(currentPage - 1);
+                    this.initMermaid();
+                    setTimeout(() => { this.isFlipping = false; }, 150);
+                } else if (dir === 'next' && currentPage < TOTAL_PAGES - 1) {
+                    this.isFlipping = true;
+                    this.flipBook.turnToNextPage();
+                    this.updatePageInfo(currentPage + 1);
+                    this.initMermaid();
+                    setTimeout(() => { this.isFlipping = false; }, 150);
+                }
+            } else {
+                dir === 'next' ? this.flipBook.flipNext() : this.flipBook.flipPrev();
             }
         };
-        document.querySelectorAll('.page').forEach(page => {
-            page.addEventListener('touchstart', blockMiddleDrag, { passive: true });
-            page.addEventListener('pointerdown', blockMiddleDrag, { passive: true });
-            page.addEventListener('mousedown', blockMiddleDrag, { passive: true });
-        });
+
+        document.querySelector(this.selectors.prevBtn).onclick = (e) => { e.preventDefault(); safeFlip('prev'); };
+        document.querySelector(this.selectors.nextBtn).onclick = (e) => { e.preventDefault(); safeFlip('next'); };
 
         navItems.forEach(nav => {
             nav.addEventListener('click', (e) => {
                 e.preventDefault();
-                const page = parseInt(nav.dataset.page);
-                if (isNaN(page)) return;
-                this.flipBook.flip(page);
+                if (this.isFlipping || this.flipBook.getState() === 'flipping') return;
+                this.playSynth('click');
+                const targetPage = parseInt(nav.dataset.page);
+                if (isNaN(targetPage)) return;
+                const currentPage = this.flipBook.getCurrentPageIndex();
+                if (this.isMobile && targetPage < currentPage) {
+                    this.isFlipping = true;
+                    this.flipBook.turnToPage(targetPage);
+                    this.updatePageInfo(targetPage);
+                    navItems.forEach(n => n.classList.toggle('active', parseInt(n.dataset.page) === targetPage));
+                    this.initMermaid();
+                    setTimeout(() => { this.isFlipping = false; }, 150);
+                } else {
+                    this.flipBook.flip(targetPage);
+                }
                 if (this.isMobile) {
                     setTimeout(() => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open'), 350);
                 }
@@ -613,7 +762,6 @@ const ISO_APP = {
 
         if (this.isMobile) this.initGestureControl();
 
-        // Handle orientation/resize changes
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
@@ -626,41 +774,56 @@ const ISO_APP = {
     },
 
     initGestureControl() {
-        let startX = 0, startY = 0, isSwiping = false;
+        let startX = 0, startY = 0, isSwiping = false, startTime = 0;
         const target = document.getElementById('book-container');
         document.body.style.overscrollBehaviorX = 'none';
 
         target.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
+            startTime = Date.now();
             isSwiping = false;
         }, { passive: true });
 
         target.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 1) return; // Allow pinch to zoom
-            const vw = window.innerWidth;
-            // Native free scroll in the middle 60% zone without intercepting horizontal blocks
-            if (startX > vw * 0.2 && startX < vw * 0.8) return;
-
+            if (e.touches.length > 1) return;
             const dx = Math.abs(e.touches[0].clientX - startX);
             const dy = Math.abs(e.touches[0].clientY - startY);
-            if (dx > dy && dx > 15) {
+            if (dx > dy && dx > 10) {
                 isSwiping = true;
                 if (e.cancelable) e.preventDefault();
+            } else if (dy > dx) {
+                isSwiping = false;
             }
         }, { passive: false });
 
         target.addEventListener('touchend', (e) => {
             if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle, .sidebar-overlay')) return;
+            if (Date.now() - startTime > 600) return;
             if (!isSwiping) return;
-
-            const vw = window.innerWidth;
-            if (startX > vw * 0.2 && startX < vw * 0.8) return; // Do not custom-flip if touch started in middle zone
-
             const dx = e.changedTouches[0].clientX - startX;
-            if (Math.abs(dx) > 50) {
+            if (Math.abs(dx) > 40) {
                 if (this.isFlipping) return;
-                dx > 0 ? this.flipBook.flipPrev() : this.flipBook.flipNext();
+                if (this.isMobile) {
+                    const currentPage = this.flipBook.getCurrentPageIndex();
+                    if (dx > 0 && currentPage > 0) {
+                        this.isFlipping = true;
+                        this.flipBook.turnToPrevPage();
+                        this.updatePageInfo(currentPage - 1);
+                        this.initMermaid();
+                        this.playSynth('flip');
+                        setTimeout(() => { this.isFlipping = false; }, 150);
+                    } else if (dx < 0 && currentPage < TOTAL_PAGES - 1) {
+                        this.isFlipping = true;
+                        this.flipBook.turnToNextPage();
+                        this.updatePageInfo(currentPage + 1);
+                        this.initMermaid();
+                        this.playSynth('flip');
+                        setTimeout(() => { this.isFlipping = false; }, 150);
+                    }
+                } else {
+                    dx > 0 ? this.flipBook.flipPrev() : this.flipBook.flipNext();
+                }
             }
             isSwiping = false;
         }, { passive: true });
