@@ -20,14 +20,14 @@ const ISO_CONTENT = [
             <p style="font-size: 1.15rem; line-height: 1.6; color: #1e293b; font-weight: 500; margin: 0;">
                 「救災是一場與時間的賽跑，但安全是這場賽跑唯一的規則。身為事故安全官，你的責任並非只是觀察，而是作為指揮官最冷靜、最客觀的守護之眼。每一位進入熱區的同仁，我們都必須確保他們能平安歸隊。新竹縣消防的未來，建立在每一位安全官專業且堅定的判讀之上。」
             </p>
-            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 消防局 局長</p>
+            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 局長 陳中振</p>
         </div>
         <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #b91c1c;">【職安科科長的話】</h2>
         <div class="quote-box" style="border: 2px solid var(--primary); background: #fef2f2; padding: 1rem;">
             <p style="font-size: 1.1rem; line-height: 1.6; color: #1e293b; font-weight: 500; margin: 0;">
                 「安全管理不只是規章，更是一種戰術素養。職安科彙整此份手冊，旨在將最新的『一五一實』與『濃煙判讀』理論轉化為現場可操作的指引。我們追求的不是紙上的程序，而是每一位安全官在壓力下都能果斷執行 MEDIC 監控、隨時準備介入風險。透過這本指引，我們期許建立本局最強韌的救災安全文化。」
             </p>
-            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 職安科科長</p>
+            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 職安科科長 廖耿輝</p>
         </div>
     </div>`,
     `<div class="page">

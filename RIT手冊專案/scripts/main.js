@@ -16,17 +16,19 @@ const ISO_CONTENT = [
     </div>`,
     `<div class="page">
         <h2 style="font-size: 1.8rem; margin-bottom: 1.2rem; color: #b91c1c;">1. 組織與安全之道</h2>
-        <div class="card" style="margin-bottom: 1.5rem; background: #f8fafc; border-left: 8px solid #b91c1c;">
-            <h4 style="margin: 0; color: #020617;">局長 勉勉勵辭</h4>
-            <p style="font-size: 1.05rem; line-height: 1.6; margin-top: 0.5rem;">
-                <strong>陳中振 局長：</strong>「消防不僅是勇敢，更是專業。在面對零能見度的高壓場域，經驗傳承與標準化訓練是守護同仁的唯一堡壘。讓每一位兄弟都能安全走出火場，是我們永不妥協的承諾。」
+        <h2 style="font-size: 2rem; margin-bottom: 0.5rem; color: #b91c1c;">【局長的話】</h2>
+        <div class="quote-box" style="border: 2px solid #2563eb; background: #eff6ff; padding: 1rem;">
+            <p style="font-size: 1.15rem; line-height: 1.6; color: #1e293b; font-weight: 500; margin: 0;">
+                「消防不僅是勇敢，更是專業。在面對零能見度的高壓場域，經驗傳承與標準化訓練是守護同仁的唯一堡壘。讓每一位兄弟都能安全走出火場，是我們永不妥協的承諾。」
             </p>
+            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 局長 陳中振</p>
         </div>
-        <div class="card" style="background: #f0fdf4; border-left: 8px solid #059669;">
-            <h4 style="margin: 0; color: #020617;">消防安全衛生企劃科 期許</h4>
-            <p style="font-size: 1.05rem; line-height: 1.6; margin-top: 0.5rem;">
-                作為全台首創的職安專責單位，我們的核心目標是建立<strong>科學化</strong>與<strong>高效率</strong>的救援體系。RIT 機制不僅是救人，更是建立一道系統性的最後保線。
+        <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #b91c1c;">【職安科科長的話】</h2>
+        <div class="quote-box" style="border: 2px solid var(--primary); background: #fef2f2; padding: 1rem;">
+            <p style="font-size: 1.15rem; line-height: 1.6; color: #1e293b; font-weight: 500; margin: 0;">
+                「作為全台首創的職安專責單位，我們的核心目標是建立科學化與高效率的救援體系。RIT 機制不僅是救人，更是建立一道系統性的最後保線。」
             </p>
+            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 職安科科長 廖耿輝</p>
         </div>
     </div>`,
     `<div class="page">
