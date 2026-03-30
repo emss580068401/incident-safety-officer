@@ -536,12 +536,11 @@ const ISO_APP = {
             };
             this.flipBook = new St.PageFlip(element, config);
         } else {
-            // Desktop: standard book mode — wider/shorter ratio to fit monitors
+            // Desktop: standard book mode
             const config = {
-                width: 700,
-                height: 900,
+                width: 650,
+                height: 950,
                 size: "stretch",
-                maxHeight: vh,
                 showCover: true,
                 useMouseEvents: false,
                 disableFlipByClick: true,
@@ -627,7 +626,8 @@ const ISO_APP = {
         document.querySelector(this.selectors.menuToggle).onclick = () => document.querySelector(this.selectors.appContainer).classList.add('sidebar-open');
         document.querySelector(this.selectors.closeSidebar).onclick = () => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
 
-        // No swipe gesture on mobile — use buttons only for clean, conflict-free UX
+        // Mobile-only: custom gesture control for swipe-to-flip
+        if (this.isMobile) this.initGestureControl();
 
         // Handle orientation/resize changes
         let resizeTimer;
@@ -639,6 +639,69 @@ const ISO_APP = {
                 if (wasMobile !== this.isMobile) location.reload();
             }, 300);
         });
+    },
+
+    initGestureControl() {
+        let startX = 0, startY = 0;
+        let tracking = false;
+        let gestureDecided = false;  // Once we decide scroll vs swipe, lock it
+        let isHorizontalSwipe = false;
+        const target = document.getElementById('book-container');
+
+        // Prevent browser back/forward gesture
+        document.body.style.overscrollBehaviorX = 'none';
+
+        target.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) return; // Ignore multi-touch
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            tracking = true;
+            gestureDecided = false;
+            isHorizontalSwipe = false;
+        }, { passive: true });
+
+        target.addEventListener('touchmove', (e) => {
+            if (!tracking || e.touches.length > 1) return;
+
+            const dx = Math.abs(e.touches[0].clientX - startX);
+            const dy = Math.abs(e.touches[0].clientY - startY);
+
+            // Decide gesture direction once we have enough movement
+            if (!gestureDecided && (dx > 10 || dy > 10)) {
+                gestureDecided = true;
+                // Only treat as horizontal swipe if dx is clearly dominant
+                isHorizontalSwipe = (dx > dy * 2) && (dx > 15);
+            }
+
+            // If horizontal swipe, prevent vertical scroll
+            if (isHorizontalSwipe && e.cancelable) {
+                e.preventDefault();
+            }
+            // If vertical (or undecided), do nothing — let native scroll work naturally
+        }, { passive: false });
+
+        target.addEventListener('touchend', (e) => {
+            if (!tracking) return;
+            tracking = false;
+
+            // Skip if touch was on UI elements
+            const startEl = document.elementFromPoint(startX, startY);
+            if (startEl && startEl.closest('.nav-btn, .sidebar, .menu-toggle, .sidebar-overlay')) return;
+
+            // Only trigger flip if we decided it was a horizontal swipe
+            if (!isHorizontalSwipe) return;
+
+            const dx = e.changedTouches[0].clientX - startX;
+            const absDx = Math.abs(dx);
+
+            // Require a significant horizontal distance to trigger flip
+            if (absDx > 60) {
+                if (this.isFlipping) return;
+                dx > 0 ? this.flipBook.flipPrev() : this.flipBook.flipNext();
+            }
+
+            isHorizontalSwipe = false;
+        }, { passive: true });
     }
 };
 
