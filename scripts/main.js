@@ -3,13 +3,13 @@
 const ISO_CONTENT = [
     `<div class="page cover" style="padding: 0; background: #020617;">
         <div style="height: 100%; width: 100%; position: relative; overflow: hidden;">
-            <img src="assets/cover.png" style="width: 100%; height: 65%; object-fit: cover;">
+            <img src="assets/cover.jpg" style="width: 100%; height: 65%; object-fit: cover;">
             <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
                         background: linear-gradient(transparent, #020617 80%); padding: 2rem 3.5rem;
                         display: flex; flex-direction: column; justify-content: flex-end;">
-                <h1 style="font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.1; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 0.5rem;">事故安全官<br>實戰指引</h1>
+                <h1 style="font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.1; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 0.5rem;">事故安全官<br>實戰指引 v1.1</h1>
                 <div style="border-top: 4px solid var(--primary); margin-top: 0.8rem; padding-top: 0.8rem;">
-                    <p style="font-size: clamp(0.9rem, 2vw, 1.2rem); font-weight: 700; color: #fff; margin-bottom: 0;">新竹縣政府消防局 事故安全官 數位教材</p>
+                    <p style="font-size: clamp(0.9rem, 2vw, 1.2rem); font-weight: 700; color: #fff; margin-bottom: 0;">新竹縣政府消防局 職安科</p>
                 </div>
             </div>
         </div>
@@ -20,14 +20,14 @@ const ISO_CONTENT = [
             <p style="font-size: 1.15rem; line-height: 1.6; color: #1e293b; font-weight: 500; margin: 0;">
                 「救災是一場與時間的賽跑，但安全是這場賽跑唯一的規則。身為事故安全官，你的責任並非只是觀察，而是作為指揮官最冷靜、最客觀的守護之眼。每一位進入熱區的同仁，我們都必須確保他們能平安歸隊。新竹縣消防的未來，建立在每一位安全官專業且堅定的判讀之上。」
             </p>
-            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 局長 陳中振</p>
+            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 消防局 局長</p>
         </div>
         <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #b91c1c;">【職安科科長的話】</h2>
         <div class="quote-box" style="border: 2px solid var(--primary); background: #fef2f2; padding: 1rem;">
             <p style="font-size: 1.1rem; line-height: 1.6; color: #1e293b; font-weight: 500; margin: 0;">
                 「安全管理不只是規章，更是一種戰術素養。職安科彙整此份手冊，旨在將最新的『一五一實』與『濃煙判讀』理論轉化為現場可操作的指引。我們追求的不是紙上的程序，而是每一位安全官在壓力下都能果斷執行 MEDIC 監控、隨時準備介入風險。透過這本指引，我們期許建立本局最強韌的救災安全文化。」
             </p>
-            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 職安科科長 廖耿輝</p>
+            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 職安科科長</p>
         </div>
     </div>`,
     `<div class="page">
@@ -513,42 +513,13 @@ const ISO_APP = {
 
     initEngine() {
         const element = document.querySelector(this.selectors.book);
-        const bookContainer = document.getElementById('book-container');
-        const vw = bookContainer.clientWidth;
-        const vh = bookContainer.clientHeight;
+        const vw = document.getElementById('book-container').clientWidth;
+        const vh = document.getElementById('book-container').clientHeight;
+        const config = this.isMobile
+            ? { width: vw, height: vh, size: "fixed", minWidth: 1200, showCover: true, useMouseEvents: true, disableFlipByClick: false, flippingTime: 400, maxShadowOpacity: 0.15, usePortrait: true, mobileScrollSupport: true }
+            : { width: 650, height: 950, size: "stretch", showCover: true, useMouseEvents: false, disableFlipByClick: true, flippingTime: 800 };
 
-        if (this.isMobile) {
-            // Mobile: disable ALL StPageFlip built-in touch/mouse/click events.
-            // We handle flip exclusively via our custom gesture handler + nav buttons.
-            const config = {
-                width: vw,
-                height: vh,
-                size: "fixed",
-                showCover: true,
-                useMouseEvents: false,      // No mouse drag
-                disableFlipByClick: true,    // No click-to-flip
-                flippingTime: 350,
-                maxShadowOpacity: 0.1,
-                usePortrait: true,
-                mobileScrollSupport: false,  // CRITICAL: prevent vertical scroll hijack
-                swipeDistance: 99999,         // Effectively disable built-in swipe
-                startZIndex: 0
-            };
-            this.flipBook = new St.PageFlip(element, config);
-        } else {
-            // Desktop: standard book mode
-            const config = {
-                width: 650,
-                height: 950,
-                size: "stretch",
-                showCover: true,
-                useMouseEvents: false,
-                disableFlipByClick: true,
-                flippingTime: 800
-            };
-            this.flipBook = new St.PageFlip(element, config);
-        }
-
+        this.flipBook = new St.PageFlip(element, config);
         this.flipBook.loadFromHTML(document.querySelectorAll('.page'));
     },
 
@@ -565,7 +536,7 @@ const ISO_APP = {
                 const rect = el.getBoundingClientRect();
                 if (rect.width === 0 || rect.height === 0) return;
                 if (!el.id) el.id = 'mermaid-' + Date.now() + '-' + i;
-                try { window.mermaid.init(undefined, [el]); } catch (e) { /* skip */ }
+                try { window.mermaid.init(undefined, [el]); } catch(e) { /* skip */ }
                 el.setAttribute('data-processed', 'true');
             });
         }, 850);
@@ -578,9 +549,9 @@ const ISO_APP = {
             this.updatePageInfo(e.data);
             navItems.forEach(nav => nav.classList.toggle('active', parseInt(nav.dataset.page) === e.data));
             this.initMermaid();
-            // Debounce flip lock - longer on mobile to fully prevent double flip
+            // Debounce flip lock
             this.isFlipping = true;
-            setTimeout(() => { this.isFlipping = false; }, this.isMobile ? 500 : 850);
+            setTimeout(() => { this.isFlipping = false; }, this.isMobile ? 450 : 850);
         });
 
         const safeFlip = (dir) => {
@@ -592,7 +563,7 @@ const ISO_APP = {
         const prevBtn = document.querySelector(this.selectors.prevBtn);
         const nextBtn = document.querySelector(this.selectors.nextBtn);
 
-        // Button events: use touchend on mobile, click on desktop, prevent ghost clicks
+        // Unified touch+click: use flag to prevent double-fire from touch->click
         let touchFired = false;
         const addBtnEvents = (btn, dir) => {
             btn.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
@@ -600,7 +571,7 @@ const ISO_APP = {
                 e.preventDefault();
                 touchFired = true;
                 safeFlip(dir);
-                setTimeout(() => { touchFired = false; }, 400);
+                setTimeout(() => { touchFired = false; }, 300);
             }, { passive: false });
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -610,7 +581,21 @@ const ISO_APP = {
         addBtnEvents(prevBtn, 'prev');
         addBtnEvents(nextBtn, 'next');
 
-        // Sidebar nav items
+        // Block StPageFlip drag in the middle 60% on mobile so users can scroll perfectly
+        const blockMiddleDrag = (e) => {
+            if (!this.isMobile) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const vw = window.innerWidth;
+            if (clientX > vw * 0.2 && clientX < vw * 0.8) {
+                e.stopPropagation();
+            }
+        };
+        document.querySelectorAll('.page').forEach(page => {
+            page.addEventListener('touchstart', blockMiddleDrag, { passive: true });
+            page.addEventListener('pointerdown', blockMiddleDrag, { passive: true });
+            page.addEventListener('mousedown', blockMiddleDrag, { passive: true });
+        });
+
         navItems.forEach(nav => {
             nav.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -626,7 +611,6 @@ const ISO_APP = {
         document.querySelector(this.selectors.menuToggle).onclick = () => document.querySelector(this.selectors.appContainer).classList.add('sidebar-open');
         document.querySelector(this.selectors.closeSidebar).onclick = () => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
 
-        // Mobile-only: custom gesture control for swipe-to-flip
         if (this.isMobile) this.initGestureControl();
 
         // Handle orientation/resize changes
@@ -642,65 +626,43 @@ const ISO_APP = {
     },
 
     initGestureControl() {
-        let startX = 0, startY = 0;
-        let tracking = false;
-        let gestureDecided = false;  // Once we decide scroll vs swipe, lock it
-        let isHorizontalSwipe = false;
+        let startX = 0, startY = 0, isSwiping = false;
         const target = document.getElementById('book-container');
-
-        // Prevent browser back/forward gesture
         document.body.style.overscrollBehaviorX = 'none';
 
         target.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 1) return; // Ignore multi-touch
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
-            tracking = true;
-            gestureDecided = false;
-            isHorizontalSwipe = false;
+            isSwiping = false;
         }, { passive: true });
 
         target.addEventListener('touchmove', (e) => {
-            if (!tracking || e.touches.length > 1) return;
+            if (e.touches.length > 1) return; // Allow pinch to zoom
+            const vw = window.innerWidth;
+            // Native free scroll in the middle 60% zone without intercepting horizontal blocks
+            if (startX > vw * 0.2 && startX < vw * 0.8) return; 
 
             const dx = Math.abs(e.touches[0].clientX - startX);
             const dy = Math.abs(e.touches[0].clientY - startY);
-
-            // Decide gesture direction once we have enough movement
-            if (!gestureDecided && (dx > 10 || dy > 10)) {
-                gestureDecided = true;
-                // Only treat as horizontal swipe if dx is clearly dominant
-                isHorizontalSwipe = (dx > dy * 2) && (dx > 15);
+            if (dx > dy && dx > 15) {
+                isSwiping = true;
+                if (e.cancelable) e.preventDefault();
             }
-
-            // If horizontal swipe, prevent vertical scroll
-            if (isHorizontalSwipe && e.cancelable) {
-                e.preventDefault();
-            }
-            // If vertical (or undecided), do nothing — let native scroll work naturally
         }, { passive: false });
 
         target.addEventListener('touchend', (e) => {
-            if (!tracking) return;
-            tracking = false;
-
-            // Skip if touch was on UI elements
-            const startEl = document.elementFromPoint(startX, startY);
-            if (startEl && startEl.closest('.nav-btn, .sidebar, .menu-toggle, .sidebar-overlay')) return;
-
-            // Only trigger flip if we decided it was a horizontal swipe
-            if (!isHorizontalSwipe) return;
+            if (document.elementFromPoint(startX, startY)?.closest('.nav-btn, .sidebar, .menu-toggle, .sidebar-overlay')) return;
+            if (!isSwiping) return;
+            
+            const vw = window.innerWidth;
+            if (startX > vw * 0.2 && startX < vw * 0.8) return; // Do not custom-flip if touch started in middle zone
 
             const dx = e.changedTouches[0].clientX - startX;
-            const absDx = Math.abs(dx);
-
-            // Require a significant horizontal distance to trigger flip
-            if (absDx > 60) {
+            if (Math.abs(dx) > 50) {
                 if (this.isFlipping) return;
                 dx > 0 ? this.flipBook.flipPrev() : this.flipBook.flipNext();
             }
-
-            isHorizontalSwipe = false;
+            isSwiping = false;
         }, { passive: true });
     }
 };
