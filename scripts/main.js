@@ -80,7 +80,7 @@ const ISO_CONTENT = [
         </div>
         <div class="card" style="margin-top: 1.5rem; border-left-color: #2563eb;">
             <h4>第二步：掌握入室名單 (PAS Integration)</h4>
-            <p style="font-size: 1.15rem;">同步各入口管制板。一定要知道「現在熱區有幾個小組？在哪？氣壓還剩多少？」如果不知道人在開，發生 MAYDAY 你根本救不起。</p>
+            <p style="font-size: 1.15rem;">同步各入口管制板。一定要知道「現在熱區有幾個小組？在哪？氣壓還剩多少？」如果不知道人在哪，發生 MAYDAY 你根本救不起。</p>
         </div>
     </div>`,
     `<div class="page">
@@ -229,7 +229,7 @@ const ISO_CONTENT = [
         <h4>3. 輻射監控場所</h4>
         <p style="font-size: 1.1rem;">三項安全監控：1.時間(限時) | 2.距離(偵檢) | 3.屏蔽(厚牆)。</p>
         <hr style="margin: 1rem 0;">
-        <h4>4. 新能源其與電動車 (Lithium-ion / EV)</h4>
+        <h4>4. 新能源設備與電動車 (Lithium-ion / EV)</h4>
         <p style="font-size: 1.1rem;">
             ● <strong>熱失控預警</strong>：鋰電池「嘶嘶」聲、噴射白煙表示即將爆裂。<br>
             ● <strong>毒氣預警</strong>：氟化氫 (HF) 劇毒，面罩嚴禁脫除。
@@ -308,7 +308,7 @@ const ISO_CONTENT = [
     `<div class="page">
         <div class="card" style="border-left-color: #2563eb;">
             <h4>案例 B：多層建築通訊死角</h4>
-            五樓深入後斷訊。ISO 建立「助理安官」中繼。結論：通訊斷，安全就斷。
+            <p style="font-size: 1.1rem;">五樓深入後斷訊。ISO 建立「助理安全官」中繼。結論：通訊斷，安全就斷。</p>
         </div>
         <hr style="margin: 2rem 0;">
         <h2>第十章：事故後檢討 (AAR)</h2>
@@ -332,7 +332,7 @@ const ISO_CONTENT = [
                 <strong style="font-size: 1.15rem;">1. 時序管理 (一五一實)</strong><br>
                 • <strong>1 Min</strong>：位址、水源、是否增派？<br>
                 • <strong>5 Min</strong>：延燒、受困、初期戰術是否有效？<br>
-                • <strong>1 Hr</strong>：戰術檢討、人員輪替、水線量整。<br>
+                • <strong>1 Hr</strong>：戰術檢討、人員輪替、水線位置重整。<br>
                 • <strong>Real</strong>：精確掌握入室名單、氣壓與位置。<br>
                 • <strong>Note</strong>：三級火警以上 ISO 必須<strong>專任 (不可兼任)</strong>。
             </div>
@@ -408,7 +408,7 @@ const ISO_CONTENT = [
         </div>
     </div>`,
     `<div class="page centered">
-        <h2 style="font-size: 2rem; color: #b91c1c;">8. MAYDAY 生知救援決策心法卡</h2>
+        <h2 style="font-size: 2rem; color: #b91c1c;">8. MAYDAY 生死救援決策心法卡</h2>
         <div class="mermaid" style="font-size: 0.95rem; padding: 1rem; background: #fff; border-radius: 8px;">
             graph TD
                 A[聽到 MAYDAY] --> B[全場頻道第一優先權]
