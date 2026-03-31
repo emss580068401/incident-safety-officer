@@ -520,29 +520,29 @@ const ISO_APP = {
         const element = document.querySelector(this.selectors.book);
         const vw = document.getElementById('book-container').clientWidth;
         const vh = document.getElementById('book-container').clientHeight;
-        
+
         const config = this.isMobile
-            ? { 
-                width: vw, 
-                height: vh, 
-                size: "fixed", 
-                showCover: false, 
-                useMouseEvents: false, 
-                disableFlipByClick: true, 
-                flippingTime: 400, 
-                maxShadowOpacity: 0.15, 
-                usePortrait: true, 
-                mobileScrollSupport: false 
-              }
-            : { 
-                width: 650, 
-                height: 950, 
-                size: "stretch", 
-                showCover: true, 
-                useMouseEvents: false, 
-                disableFlipByClick: true, 
-                flippingTime: 800 
-              };
+            ? {
+                width: vw,
+                height: vh,
+                size: "fixed",
+                showCover: false,
+                useMouseEvents: false,
+                disableFlipByClick: true,
+                flippingTime: 400,
+                maxShadowOpacity: 0.15,
+                usePortrait: true,
+                mobileScrollSupport: false
+            }
+            : {
+                width: 650,
+                height: 950,
+                size: "stretch",
+                showCover: true,
+                useMouseEvents: false,
+                disableFlipByClick: true,
+                flippingTime: 800
+            };
 
         this.flipBook = new St.PageFlip(element, config);
         this.flipBook.loadFromHTML(document.querySelectorAll('.page'));
@@ -551,7 +551,7 @@ const ISO_APP = {
     updatePageInfo(pageIndex) {
         const pageInfo = document.querySelector(this.selectors.pageInfo);
         if (pageInfo) pageInfo.textContent = `${pageIndex + 1} / ${TOTAL_PAGES}`;
-        
+
         const progressFill = document.querySelector(this.selectors.progressFill);
         if (progressFill) {
             const pct = ((pageIndex + 1) / TOTAL_PAGES) * 100;
@@ -578,7 +578,7 @@ const ISO_APP = {
             if (this.audioUnlocked) return;
             this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
-            
+
             const buffer = this.audioCtx.createBuffer(1, 1, 22050);
             const source = this.audioCtx.createBufferSource();
             source.buffer = buffer;
