@@ -613,25 +613,52 @@ const ISO_APP = {
             gain.connect(this.audioCtx.destination);
             osc.start(now);
             osc.stop(now + 0.1);
+        } else if (type === 'hover') {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.05);
+        } else if (type === 'toggle') {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(40, now + 0.1);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.1);
         } else if (type === 'flip') {
-            const bufferSize = this.audioCtx.sampleRate * 0.3;
+            // 模擬紙張翻動的音效 (低頻摩擦聲 + 高頻沙沙聲)
+            const bufferSize = this.audioCtx.sampleRate * 0.4;
             const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
             const data = buffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            
             const noise = this.audioCtx.createBufferSource();
             noise.buffer = buffer;
             const filter = this.audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(3000, now);
-            filter.frequency.exponentialRampToValueAtTime(500, now + 0.3);
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(800, now);
+            filter.frequency.exponentialRampToValueAtTime(200, now + 0.4);
             const gain = this.audioCtx.createGain();
-            gain.gain.setValueAtTime(0.08, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            
             noise.connect(filter);
             filter.connect(gain);
             gain.connect(this.audioCtx.destination);
             noise.start(now);
-            noise.stop(now + 0.3);
+            noise.stop(now + 0.4);
         }
     },
 
@@ -752,13 +779,33 @@ const ISO_APP = {
                     this.flipBook.flip(targetPage);
                 }
                 if (this.isMobile) {
-                    setTimeout(() => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open'), 350);
+                    setTimeout(() => {
+                        document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
+                        this.playSynth('toggle');
+                    }, 350);
                 }
             });
+
+            // 增加懸停音效 (跨境感)
+            nav.addEventListener('mouseenter', () => this.playSynth('hover'));
+            nav.addEventListener('mouseleave', () => this.playSynth('hover'));
         });
 
-        document.querySelector(this.selectors.menuToggle).onclick = () => document.querySelector(this.selectors.appContainer).classList.add('sidebar-open');
-        document.querySelector(this.selectors.closeSidebar).onclick = () => document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
+        // 菜單與側邊欄開關音效
+        document.querySelector(this.selectors.menuToggle).onclick = () => {
+            document.querySelector(this.selectors.appContainer).classList.add('sidebar-open');
+            this.playSynth('toggle');
+        };
+        document.querySelector(this.selectors.closeSidebar).onclick = () => {
+            document.querySelector(this.selectors.appContainer).classList.remove('sidebar-open');
+            this.playSynth('toggle');
+        };
+
+        // 為所有導航按鈕增加懸停音效
+        document.querySelectorAll(this.selectors.prevBtn + ', ' + this.selectors.nextBtn + ', ' + this.selectors.menuToggle + ', ' + this.selectors.closeSidebar).forEach(btn => {
+            btn.addEventListener('mouseenter', () => this.playSynth('hover'));
+            btn.addEventListener('mouseleave', () => this.playSynth('hover'));
+        });
 
         if (this.isMobile) this.initGestureControl();
 
