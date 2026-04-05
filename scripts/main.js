@@ -16,24 +16,20 @@ const ISO_CONTENT = [
     </div>`,
     `<div class="page">
         <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #b91c1c;">【局長的話】</h2>
-        <div class="quote-box" style="border: 2px solid var(--primary); background: #fef2f2; padding: 1rem; margin-bottom: 1.5rem;">
-            <p style="font-size: 1.15rem; line-height: 1.6; color: #1e293b; font-weight: 500; margin: 0;">
-                「救災是一場與時間的賽跑，但安全是這場賽跑唯一的規則。身為事故安全官，你的責任並非只是觀察，而是作為指揮官最冷靜、最客觀的守護之眼。每一位進入熱區的同仁，我們都必須確保他們能平安歸隊。新竹縣消防的未來，建立在每一位安全官專業且堅定的判讀之上。」
+        <div class="quote-box" style="border: 2px solid var(--primary); background: #fef2f2; padding: 1.5rem; margin-bottom: 1.5rem;">
+            <p style="font-size: 1.15rem; line-height: 1.8; color: #1e293b; font-weight: 500; margin-bottom: 1.2rem;">
+                「救災是一場與時間的賽跑，但「安全」是這場賽跑最重要的規則，更是每一位幹部跟同仁的責任！在每一場的救災任務，我們都必須確保每一位同仁能平安歸隊。」
             </p>
-            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 局長 陳中振</p>
-        </div>
-        <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #b91c1c;">【職安科科長的話】</h2>
-        <div class="quote-box" style="border: 2px solid var(--primary); background: #fef2f2; padding: 1rem;">
-            <p style="font-size: 1.1rem; line-height: 1.6; color: #1e293b; font-weight: 500; margin: 0;">
-                「安全管理不只是規章，更是一種戰術素養。職安科彙整此份手冊，旨在將最新的『一五一實』與『濃煙判讀』理論轉化為現場可操作的指引。我們追求的不是紙上的程序，而是每一位安全官在壓力下都能果斷執行 MEDIC 監控、隨時準備介入風險。透過這本指引，我們期許建立本局最強韌的救災安全文化。」
+            <p style="font-size: 1.15rem; line-height: 1.8; color: #1e293b; font-weight: 500; margin: 0;">
+                安全管理不只是規章，我們希望將安全的觀念深植在每一位幹部及同仁的心中，本次由職安科特別彙整製作數位教材並融入網頁及互動教材中，旨在將平時生硬執行理論轉化為可模擬互動的操作，透過數位學習讓「安全」成為一種觀念與態度，期許建立本局最強韌的安全文化！
             </p>
-            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 0.5rem;">—— 職安科科長 廖耿輝</p>
+            <p style="text-align: right; font-weight: 700; font-size: 1rem; margin-top: 1rem;">—— 局長 陳中振</p>
         </div>
     </div>`,
     `<div class="page">
         <h2 style="font-size: 2rem; color: #b91c1c; margin-bottom: 1.5rem;">導讀：學長告訴你，為什麼這份手冊能救命？</h2>
         <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 1.5rem;">
-            兄弟，當你穿上那件印有「ISO」或「事故安全官」字樣的背心時，你肩上的擔子比拿著水槍的小隊長還要沉。這本手冊不是寫給上級看的官僚文章，而是職安科為了讓你、也讓你帶領的同仁都能「全進全出」而寫的救命書。
+            兄弟，當你穿上那件印有「ISO」或「事故安全官」字樣的背心時，你肩上的擔子比拿著水線的小隊長還要沉。這本手冊不是寫給上級看的官僚文章，而是為了讓你、也讓你帶領的同仁都能「全進全出」而寫的救命書。
         </p>
         <p style="font-size: 1.22rem; line-height: 1.6;">
             在火場，危險是會「進化」的。如果你只靠經驗去「猜」，那是在拿命開玩笑。這份指引結合了我們最痛的教訓，教你如何用「鷹眼」看穿火場的謊言，在災難發生前 30 秒就把同仁拉回來。
@@ -52,7 +48,7 @@ const ISO_CONTENT = [
         <h4>1.1 獨立決策權</h4>
         <p style="font-size: 1.15rem;">你是指揮官最親密的幕僚。你的視角跟指揮官不一樣：</p>
         <ul style="font-size: 1.15rem; line-height: 1.6;">
-            <li><strong>指揮官 (IC)</strong>：看的是「任務進度」，想著怎麼滅火。</li>
+            <li><strong>指揮官 (IC)</strong>：看的是「全面性」，無法了解整個細節。</li>
             <li><strong>事故安全官 (ISO)</strong>：看的是「人員風險」，想著大家能不能活著撤。</li>
         </ul>
     </div>`,
